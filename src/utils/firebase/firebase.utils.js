@@ -21,7 +21,6 @@ const firebaseConfig = {
   appId: '1:96970754250:web:ed21869eb1c0a4dfb6cc33',
 };
 
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
@@ -83,7 +82,3 @@ export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
-
-//userDocRef -> get the reference to that particular document
-
-//userSnapShot -> we get the exact document data object
