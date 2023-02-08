@@ -20,6 +20,8 @@ import {
   getDocs,
 } from 'firebase/firestore';
 
+import { getStorage, ref } from 'firebase/storage';
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyDbA12ZqUPQSkLvUmnJhgNqCVRb6Kglyv4',
@@ -31,6 +33,7 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
+const storage = getStorage();
 
 //////////////////////////////////////////////////////////////
 //SIGN IN WITH GOOGLE
@@ -67,8 +70,8 @@ export const onAuthStateChangedListener = (callback) =>
 
 //////////////////////////////////////////////////////////////
 //GET YOUR DATABASE
-export const db = getFirestore();
 //////////////////////////////////////////////////////////////
+export const db = getFirestore();
 
 ///////////////////////////////////////////////////////////////
 //ADD COLLECTION AND ITS DOCUMENTS AT ONCE IN BULK
