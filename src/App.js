@@ -9,6 +9,7 @@ import Authentication from './routes/authentication/authentication.component';
 import Shop from './routes/shop/shop.component';
 import Checkout from './routes/checkout/checkout.component';
 import Profile from './routes/profile/profile.component';
+import Users from './routes/users/users.component';
 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useContext(UserContext);
@@ -56,6 +57,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='users'
+          element={
+            <PrivateRoute>
+              <Users />
             </PrivateRoute>
           }
         />

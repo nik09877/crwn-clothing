@@ -241,6 +241,16 @@ export const getFriends = async (currentUser, setFriends) => {
   //   });
 };
 
+//COMMENT GET USERS
+export const getUsers = async (setUsers) => {
+  const users = [];
+  const querySnapshot = await getDocs(collection(db, 'users'));
+  querySnapshot.forEach((doc) => {
+    users.push({ id: doc.id, ...doc.data() });
+  });
+  setUsers(users);
+};
+
 //////////////////////////////////////////////////////////////
 // CRUD OPERATIONS ON 'CATEGORIES' COLLECTION
 //////////////////////////////////////////////////////////////
