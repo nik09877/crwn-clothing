@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+// import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
@@ -9,9 +9,10 @@ import { CartProvider } from './contexts/cart.context';
 
 import './index.scss';
 
-const rootElement = document.getElementById('root');
-
-render(
+import { createRoot } from 'react-dom/client';
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
@@ -22,6 +23,22 @@ render(
         </CategoriesProvider>
       </UserProvider>
     </BrowserRouter>
-  </React.StrictMode>,
-  rootElement
+  </React.StrictMode>
 );
+
+// const rootElement = document.getElementById('root');
+
+// render(
+//   <React.StrictMode>
+//     <BrowserRouter>
+//       <UserProvider>
+//         <CategoriesProvider>
+//           <CartProvider>
+//             <App />
+//           </CartProvider>
+//         </CategoriesProvider>
+//       </UserProvider>
+//     </BrowserRouter>
+//   </React.StrictMode>,
+//   rootElement
+// );

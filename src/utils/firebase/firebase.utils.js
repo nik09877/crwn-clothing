@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  updateProfile,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -18,9 +19,15 @@ import {
   writeBatch,
   query,
   getDocs,
+  updateDoc,
 } from 'firebase/firestore';
 
-import { getStorage, ref } from 'firebase/storage';
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -68,6 +75,17 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
 
+//COMMENT UPDATE USER AUTHENTICATION DETAILS
+export const updateAuthProfile = async (fieldName, fieldVal) => {
+  updateProfile(auth.currentUser, {
+    fieldName: fieldVal,
+  })
+    .then(() => {})
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 //////////////////////////////////////////////////////////////
 //GET YOUR DATABASE
 //////////////////////////////////////////////////////////////
@@ -96,6 +114,8 @@ export const addCollectionAndDocuments = async (
 //////////////////////////////////////////////////////////////
 // CRUD OPERATIONS ON 'USERS' COLLECTION
 //////////////////////////////////////////////////////////////
+
+//COMMENT CREATE USER
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
@@ -114,6 +134,10 @@ export const createUserDocumentFromAuth = async (
       await setDoc(userDocRef, {
         displayName,
         email,
+        profilePic:
+          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+        subtotal: 0,
+        noItems: 0,
         createdAt,
         ...additionalInformation,
       });
@@ -123,6 +147,98 @@ export const createUserDocumentFromAuth = async (
   }
 
   return userDocRef;
+};
+
+//COMMENT UPLOAD PROFILE PIC TO STORAGE
+export const uploadProfilePic = async (currentUser, file, setProfilePic) => {
+  const metadata = {
+    contentType: 'image/jpeg',
+  };
+
+  // Upload file and metadata to the object 'images/mountains.jpg'
+  const storageRef = ref(storage, currentUser.email + '-photo-' + file.name);
+  const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+  // Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    'state_changed',
+    (snapshot) => {},
+    (error) => {
+      console.log(error);
+    },
+    () => {
+      // Upload completed successfully, now we can get the download URL
+      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+        try {
+          //update user in authentication
+          await updateProfile(currentUser, {
+            photoURL: downloadURL,
+          });
+
+          //update user doc in users collection
+          const docRef = doc(db, 'users', currentUser.uid);
+          await updateDoc(docRef, {
+            profilePic: downloadURL,
+          });
+          setProfilePic(downloadURL);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    }
+  );
+};
+
+//COMMENT UPDATE USER
+export const updateUser = async (
+  currentUser,
+  collectionName,
+  fieldName,
+  fieldVal
+) => {
+  const docRef = doc(db, collectionName, currentUser.uid);
+
+  await updateDoc(docRef, {
+    [fieldName]: fieldVal,
+  });
+};
+
+//COMMENT GET USER
+export const getUser = async (currentUser) => {
+  const docRef = doc(db, 'users', currentUser.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  } else {
+    console.log('No such document!');
+    return {};
+  }
+};
+
+//COMMENT GET FRIENDS
+export const getFriends = async (currentUser, setFriends) => {
+  const friends = [];
+  const querySnapshot = await getDocs(
+    collection(db, 'users', currentUser.uid, 'friends')
+  );
+  querySnapshot.forEach((doc) => {
+    friends.push({ id: doc.id, ...doc.data() });
+  });
+  setFriends(friends);
+
+  // const friends = [];
+  // db.collection('users')
+  //   .doc(currentUser.uid)
+  //   .collection('friends')
+  //   .onSnapshot((snapshot) => {
+  //     setFriends(
+  //       snapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }))
+  //     );
+  //   });
 };
 
 //////////////////////////////////////////////////////////////
