@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import User from '../../components/user/user.component';
+import { UserContext } from '../../contexts/user.context';
 import { getUsers } from '../../utils/firebase/firebase.utils';
 
 const Users = () => {
   const [query, setQuery] = useState('');
   const [users, setUsers] = useState([]);
-
+  const { currentUser } = useContext(UserContext);
   const handleQueryChange = (e) => {
     setQuery(e.target.value);
   };
@@ -18,22 +20,18 @@ const Users = () => {
 
   const filteredUsers = users.filter(
     (user) =>
-      user.displayName.toLowerCase().includes(query.toLowerCase()) ||
-      user.email.toLowerCase().includes(query.toLowerCase())
+      (user.displayName.toLowerCase().includes(query.toLowerCase()) ||
+        user.email.toLowerCase().includes(query.toLowerCase())) &&
+      user.email !== currentUser.email
   );
 
   return (
     <div className='users-container'>
       <h2>Find Your Shopping Buddy!</h2>
       <input type='text' onChange={handleQueryChange} />
-      {filteredUsers.length &&
-        filteredUsers.map((user) => (
-          <div className='user-container'>
-            <img src={user.profilePic} alt='user-image' />
-            <p>{user.displayName}</p>
-            <p>{user.email}</p>
-          </div>
-        ))}
+      {filteredUsers.length === 0 && <div>No User Found!</div>}
+      {filteredUsers &&
+        filteredUsers.map((user) => <User key={user.id} user={user} />)}
     </div>
   );
 };

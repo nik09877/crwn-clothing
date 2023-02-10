@@ -14,12 +14,13 @@ import {
   getFirestore,
   doc,
   getDoc,
+  getDocs,
   setDoc,
+  deleteDoc,
+  updateDoc,
   collection,
   writeBatch,
   query,
-  getDocs,
-  updateDoc,
 } from 'firebase/firestore';
 
 import {
@@ -115,6 +116,43 @@ export const addCollectionAndDocuments = async (
 // CRUD OPERATIONS ON 'USERS' COLLECTION
 //////////////////////////////////////////////////////////////
 
+//COMMENT GET USERS
+export const getUsers = async (setUsers) => {
+  const users = [];
+  const querySnapshot = await getDocs(collection(db, 'users'));
+  querySnapshot.forEach((doc) => {
+    users.push({ id: doc.id, ...doc.data() });
+  });
+  setUsers(users);
+};
+
+//COMMENT GET USER
+export const getUser = async (currentUser) => {
+  const docRef = doc(db, 'users', currentUser.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  } else {
+    console.log('No such document!');
+    return {};
+  }
+};
+
+//COMMENT UPDATE USER
+export const updateUser = async (
+  currentUser,
+  collectionName,
+  fieldName,
+  fieldVal
+) => {
+  const docRef = doc(db, collectionName, currentUser.uid);
+
+  await updateDoc(docRef, {
+    [fieldName]: fieldVal,
+  });
+};
+
 //COMMENT CREATE USER
 export const createUserDocumentFromAuth = async (
   userAuth,
@@ -147,6 +185,96 @@ export const createUserDocumentFromAuth = async (
   }
 
   return userDocRef;
+};
+
+//COMMENT GET FRIENDS
+export const getFriends = async (currentUser, setFriends) => {
+  const friends = [];
+  const querySnapshot = await getDocs(
+    collection(db, 'users', currentUser.uid, 'friends')
+  );
+  querySnapshot.forEach((doc) => {
+    friends.push({ id: doc.id, ...doc.data() });
+  });
+  setFriends(friends);
+
+  // const friends = [];
+  // db.collection('users')
+  //   .doc(currentUser.uid)
+  //   .collection('friends')
+  //   .onSnapshot((snapshot) => {
+  //     setFriends(
+  //       snapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }))
+  //     );
+  //   });
+};
+
+//COMMENT GET FRIEND REQUESTS
+export const getFriendRequests = async (currentUser, setFriendRequests) => {
+  const friendRequests = [];
+  const querySnapshot = await getDocs(
+    collection(db, 'users', currentUser.uid, 'friendRequests')
+  );
+  querySnapshot.forEach((doc) => {
+    friendRequests.push({ id: doc.id, ...doc.data() });
+  });
+  setFriendRequests(friendRequests);
+};
+
+//COMMENT CHECK FRIEND OR NOT
+export const checkFriend = async (currentUser, friend, setIsFriend) => {
+  const docRef = doc(db, 'users', currentUser.uid, 'friends', friend.id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    setIsFriend(true);
+  } else {
+  }
+};
+
+//COMMENT SEND FRIEND REQUEST
+export const sendFriendRequest = async (currentUser, friend) => {
+  const currentUserDoc = await getUser(currentUser);
+  await setDoc(
+    doc(db, 'users', friend.id, 'friendRequests', currentUser.uid),
+    {
+      requestName: currentUserDoc.displayName,
+      requestEmail: currentUserDoc.email,
+      requestPic: currentUserDoc.profilePic,
+      requestAccepted: false,
+    }
+    // { merge: true }
+  );
+};
+
+//COMMENT ACCEPT FRIEND REQUEST AND ADD FRIEND
+export const acceptFriendRequest = async (currentUser, friend) => {
+  try {
+    const currentUserDoc = await getUser(currentUser);
+    await setDoc(doc(db, 'users', currentUser.uid, 'friends', friend.id), {
+      friendEmail: friend.requestEmail,
+      friendName: friend.requestName,
+      friendProfilePic: friend.requestPic,
+    });
+    await setDoc(doc(db, 'users', friend.id, 'friends', currentUser.uid), {
+      friendEmail: currentUserDoc.email,
+      friendName: currentUserDoc.displayName,
+      friendProfilePic: currentUserDoc.profilePic,
+    });
+    await declineFriendRequest(currentUser, friend);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+//COMMENT DECLINE FRIEND REQUEST
+export const declineFriendRequest = async (currentUser, friend) => {
+  await deleteDoc(
+    doc(db, 'users', currentUser.uid, 'friendRequests', friend.id)
+  );
 };
 
 //COMMENT UPLOAD PROFILE PIC TO STORAGE
@@ -187,68 +315,6 @@ export const uploadProfilePic = async (currentUser, file, setProfilePic) => {
       });
     }
   );
-};
-
-//COMMENT UPDATE USER
-export const updateUser = async (
-  currentUser,
-  collectionName,
-  fieldName,
-  fieldVal
-) => {
-  const docRef = doc(db, collectionName, currentUser.uid);
-
-  await updateDoc(docRef, {
-    [fieldName]: fieldVal,
-  });
-};
-
-//COMMENT GET USER
-export const getUser = async (currentUser) => {
-  const docRef = doc(db, 'users', currentUser.uid);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() };
-  } else {
-    console.log('No such document!');
-    return {};
-  }
-};
-
-//COMMENT GET FRIENDS
-export const getFriends = async (currentUser, setFriends) => {
-  const friends = [];
-  const querySnapshot = await getDocs(
-    collection(db, 'users', currentUser.uid, 'friends')
-  );
-  querySnapshot.forEach((doc) => {
-    friends.push({ id: doc.id, ...doc.data() });
-  });
-  setFriends(friends);
-
-  // const friends = [];
-  // db.collection('users')
-  //   .doc(currentUser.uid)
-  //   .collection('friends')
-  //   .onSnapshot((snapshot) => {
-  //     setFriends(
-  //       snapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         ...doc.data(),
-  //       }))
-  //     );
-  //   });
-};
-
-//COMMENT GET USERS
-export const getUsers = async (setUsers) => {
-  const users = [];
-  const querySnapshot = await getDocs(collection(db, 'users'));
-  querySnapshot.forEach((doc) => {
-    users.push({ id: doc.id, ...doc.data() });
-  });
-  setUsers(users);
 };
 
 //////////////////////////////////////////////////////////////

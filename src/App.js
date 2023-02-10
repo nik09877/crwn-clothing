@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Fragment, useContext } from 'react';
 
 import { UserContext } from './contexts/user.context';
@@ -10,6 +10,7 @@ import Shop from './routes/shop/shop.component';
 import Checkout from './routes/checkout/checkout.component';
 import Profile from './routes/profile/profile.component';
 import Users from './routes/users/users.component';
+import Notifications from './routes/notifications/notifications.component';
 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useContext(UserContext);
@@ -65,6 +66,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <Users />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='notifications'
+          element={
+            <PrivateRoute>
+              <Notifications />
             </PrivateRoute>
           }
         />

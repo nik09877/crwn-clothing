@@ -13,6 +13,11 @@ const Profile = () => {
   const [currentUserDoc, setCurrentUserDoc] = useState(null);
   const [friends, setFriends] = useState([]);
 
+  const handleUploadProfilePic = async (e) => {
+    const file = e.target.files[0];
+    await uploadProfilePic(currentUser, file, setProfilePic);
+  };
+
   useEffect(() => {
     const getUserProfilePic = async () => {
       const { profilePic } = await getUser(currentUser);
@@ -35,11 +40,6 @@ const Profile = () => {
     };
     getAllFriends();
   }, []);
-
-  const handleUploadProfilePic = async (e) => {
-    const file = e.target.files[0];
-    await uploadProfilePic(currentUser, file, setProfilePic);
-  };
 
   return (
     <div className='profile-container'>
