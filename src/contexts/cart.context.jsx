@@ -1,22 +1,32 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
+import {
+  addItemToBasket,
+  deleteItemFromBasket,
+  getCartItems,
+  updateCartItemsCount,
+  updateCartPrice,
+  updateItemInBasket,
+} from '../utils/firebase/firebase.utils';
+import { UserContext } from './user.context';
 
-const addCartItem = (cartItems, productToAdd) => {
+const addCartItem = async (cartItems, productToAdd, currentUser) => {
   const existingCartItem = cartItems.find(
     (cartItem) => cartItem.id === productToAdd.id
   );
 
   if (existingCartItem) {
+    await updateItemInBasket(currentUser, productToAdd, 'inc');
     return cartItems.map((cartItem) =>
       cartItem.id === productToAdd.id
         ? { ...cartItem, quantity: cartItem.quantity + 1 }
         : cartItem
     );
   }
-
+  await addItemToBasket(currentUser, productToAdd);
   return [...cartItems, { ...productToAdd, quantity: 1 }];
 };
 
-const removeCartItem = (cartItems, cartItemToRemove) => {
+const removeCartItem = async (cartItems, cartItemToRemove, currentUser) => {
   // find the cart item to remove
   const existingCartItem = cartItems.find(
     (cartItem) => cartItem.id === cartItemToRemove.id
@@ -24,10 +34,12 @@ const removeCartItem = (cartItems, cartItemToRemove) => {
 
   // check if quantity is equal to 1, if it is remove that item from the cart
   if (existingCartItem.quantity === 1) {
+    await deleteItemFromBasket(currentUser, cartItemToRemove);
     return cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id);
   }
 
   // return back cartitems with matching cart item with reduced quantity
+  await updateItemInBasket(currentUser, cartItemToRemove, 'dec');
   return cartItems.map((cartItem) =>
     cartItem.id === cartItemToRemove.id
       ? { ...cartItem, quantity: cartItem.quantity - 1 }
@@ -35,16 +47,18 @@ const removeCartItem = (cartItems, cartItemToRemove) => {
   );
 };
 
-const clearCartItem = (cartItems, cartItemToClear) =>
-  cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
+const clearCartItem = async (cartItems, cartItemToClear, currentUser) => {
+  await deleteItemFromBasket(currentUser, cartItemToClear);
+  return cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
+};
 
 export const CartContext = createContext({
   isCartOpen: false,
   setIsCartOpen: () => {},
   cartItems: [],
-  addItemToCart: () => {},
-  removeItemFromCart: () => {},
-  clearItemFromCart: () => {},
+  addItemToCart: async () => {},
+  removeItemFromCart: async () => {},
+  clearItemFromCart: async () => {},
   cartCount: 0,
   cartTotal: 0,
 });
@@ -54,13 +68,25 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
+  const { currentUser } = useContext(UserContext);
+
+  useEffect(() => {
+    const getAllCartItems = async () => {
+      await getCartItems(currentUser, setCartItems);
+    };
+    getAllCartItems();
+  }, []);
 
   useEffect(() => {
     const newCartCount = cartItems.reduce(
       (total, cartItem) => total + cartItem.quantity,
       0
     );
-    setCartCount(newCartCount);
+    const updateCount = async () => {
+      await updateCartItemsCount(currentUser, newCartCount);
+      setCartCount(newCartCount);
+    };
+    updateCount();
   }, [cartItems]);
 
   useEffect(() => {
@@ -68,19 +94,30 @@ export const CartProvider = ({ children }) => {
       (total, cartItem) => total + cartItem.quantity * cartItem.price,
       0
     );
-    setCartTotal(newCartTotal);
+    const updateTotal = async () => {
+      await updateCartPrice(currentUser, newCartTotal);
+      setCartTotal(newCartTotal);
+    };
+    updateTotal();
   }, [cartItems]);
 
-  const addItemToCart = (productToAdd) => {
-    setCartItems(addCartItem(cartItems, productToAdd));
+  const addItemToCart = async (productToAdd) => {
+    const items = await addCartItem(cartItems, productToAdd, currentUser);
+    setCartItems(items);
   };
 
-  const removeItemToCart = (cartItemToRemove) => {
-    setCartItems(removeCartItem(cartItems, cartItemToRemove));
+  const removeItemToCart = async (cartItemToRemove) => {
+    const items = await removeCartItem(
+      cartItems,
+      cartItemToRemove,
+      currentUser
+    );
+    setCartItems(items);
   };
 
-  const clearItemFromCart = (cartItemToClear) => {
-    setCartItems(clearCartItem(cartItems, cartItemToClear));
+  const clearItemFromCart = async (cartItemToClear) => {
+    const items = await clearCartItem(cartItems, cartItemToClear, currentUser);
+    setCartItems(items);
   };
 
   const value = {

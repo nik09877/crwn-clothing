@@ -65,12 +65,12 @@ const Profile = () => {
         <h2>Your Shopping Buddies🫂</h2>
         {friends &&
           friends.map((friend) => (
-            <div className='frined-container'>
+            <div className='friend-container' key={friend.id}>
               <div className='image-container'>
-                <img src={''} alt='profile-pic' />
+                <img src={friend.friendProfilePic} alt='profile-pic' />
               </div>
-              <p>{currentUserDoc.displayName}</p>
-              <p>{currentUserDoc.email}</p>
+              <p>{friend.friendName}</p>
+              <p>{friend.friendEmail}</p>
             </div>
           ))}
       </div>

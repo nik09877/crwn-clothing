@@ -277,6 +277,122 @@ export const declineFriendRequest = async (currentUser, friend) => {
   );
 };
 
+//COMMENT GET ALL BASKET ITEMS
+export const getCartItems = async (currentUser, setCartItems) => {
+  const cartItems = [];
+  const querySnapshot = await getDocs(
+    collection(db, 'users', currentUser.uid, 'basketItems')
+  );
+  querySnapshot.forEach((doc) => {
+    /*
+    BASKET ITEM                           
+    itemId: id,
+    itemName: title,
+    itemImage: image,
+    itemPrice: price,
+    itemRating: rating,
+    itemQuantity: quantity + 1,
+
+    CART ITEM
+    id
+    imageUrl
+    name
+    price
+    */
+    const basketItem = doc.data();
+    cartItems.push({
+      id: basketItem.itemId,
+      imageUrl: basketItem.itemImage,
+      name: basketItem.itemName,
+      price: basketItem.itemPrice,
+      quantity: basketItem.itemQuantity,
+    });
+  });
+  setCartItems(cartItems);
+};
+
+//COMMENT ADD ITEM TO BASKET
+export const addItemToBasket = async (currentUser, product) => {
+  //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
+  const id = String(product.id);
+  await setDoc(
+    doc(db, 'users', currentUser.uid, 'basketItems', id),
+    {
+      itemId: product.id,
+      itemName: product.name,
+      itemImage: product.imageUrl,
+      itemPrice: product.price,
+      itemQuantity: 1,
+    }
+    // { merge: true }
+  );
+};
+
+//COMMENT UPDATE ITEM IN BASKET
+export const updateItemInBasket = async (currentUser, product, type) => {
+  //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
+  const id = String(product.id);
+
+  const docSnap = await getDoc(
+    doc(db, 'users', currentUser.uid, 'basketItems', id)
+  );
+  const basketItem = docSnap.data();
+  const newQuantity =
+    type === 'inc' ? basketItem.itemQuantity + 1 : basketItem.itemQuantity - 1;
+
+  const docRef = doc(db, 'users', currentUser.uid, 'basketItems', id);
+  await updateDoc(docRef, {
+    itemQuantity: newQuantity,
+  });
+};
+
+//COMMENT DELETE ITEM FROM BASKET
+export const deleteItemFromBasket = async (currentUser, product) => {
+  //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
+  const id = String(product.id);
+  await deleteDoc(doc(db, 'users', currentUser.uid, 'basketItems', id));
+};
+
+//COMMENT UPDATE CART PRICE
+export const updateCartPrice = async (currentUser, newCartPrice) => {
+  const docRef = doc(db, 'users', currentUser.uid);
+  await updateDoc(docRef, {
+    subtotal: newCartPrice,
+  });
+};
+
+//COMMENT UPDATE CART ITEMS COUNT
+export const updateCartItemsCount = async (currentUser, newCartItemsCnt) => {
+  const docRef = doc(db, 'users', currentUser.uid);
+  await updateDoc(docRef, {
+    noItems: newCartItemsCnt,
+  });
+};
+
+//COMMENT FIND FRIENDS WHO HAVE THE CURRRENT PRODUCT IN THEIR CART
+export const getTwins = async (currentUser, product, setTwins) => {
+  const friends = [];
+  const twins = [];
+  const querySnapshot = await getDocs(
+    collection(db, 'users', currentUser.uid, 'friends')
+  );
+  querySnapshot.forEach((doc) => {
+    friends.push({ id: doc.id, ...doc.data() });
+  });
+  friends.forEach(async (friend) => {
+    //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
+    const id = String(product.id);
+    const docRef = doc(db, 'users', friend.id, 'basketItems', id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const { friendName, friendEmail, friendProfilePic } = friend;
+      twins.push({ friendName, friendEmail, friendProfilePic });
+    }
+    setTwins(twins);
+  });
+};
+
 //COMMENT UPLOAD PROFILE PIC TO STORAGE
 export const uploadProfilePic = async (currentUser, file, setProfilePic) => {
   const metadata = {

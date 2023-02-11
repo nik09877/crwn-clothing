@@ -18,9 +18,9 @@ const CheckoutItem = ({ cartItem }) => {
   const { clearItemFromCart, addItemToCart, removeItemToCart } =
     useContext(CartContext);
 
-  const clearItemHandler = () => clearItemFromCart(cartItem);
-  const addItemHandler = () => addItemToCart(cartItem);
-  const removeItemHandler = () => removeItemToCart(cartItem);
+  const clearItemHandler = async () => await clearItemFromCart(cartItem);
+  const addItemHandler = async () => await addItemToCart(cartItem);
+  const removeItemHandler = async () => await removeItemToCart(cartItem);
 
   return (
     <CheckoutItemContainer>
