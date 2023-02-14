@@ -21,6 +21,11 @@ import {
   collection,
   writeBatch,
   query,
+  onSnapshot,
+  orderBy,
+  limit,
+  addDoc,
+  serverTimestamp, //for real time data fetching
 } from 'firebase/firestore';
 
 import {
@@ -197,19 +202,19 @@ export const getFriends = async (currentUser, setFriends) => {
     friends.push({ id: doc.id, ...doc.data() });
   });
   setFriends(friends);
+};
 
-  // const friends = [];
-  // db.collection('users')
-  //   .doc(currentUser.uid)
-  //   .collection('friends')
-  //   .onSnapshot((snapshot) => {
-  //     setFriends(
-  //       snapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         ...doc.data(),
-  //       }))
-  //     );
-  //   });
+//COMMENT GET FRIEND
+export const getFriend = async (currentUser, friendId) => {
+  const docRef = doc(db, 'users', currentUser.uid, 'friends', friendId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  } else {
+    console.log('No such document!');
+    return {};
+  }
 };
 
 //COMMENT GET FRIEND REQUESTS
@@ -274,6 +279,58 @@ export const acceptFriendRequest = async (currentUser, friend) => {
 export const declineFriendRequest = async (currentUser, friend) => {
   await deleteDoc(
     doc(db, 'users', currentUser.uid, 'friendRequests', friend.id)
+  );
+};
+
+//COMMENT GET ALL MESSAGES
+export const getMessages = async (currentUser, friendId) => {
+  const msgs = [];
+  // const q = query(
+  //   collection(db, 'users', currentUser.uid, 'friends', friendId, 'messages'),
+  //   orderBy('timestamp', 'asc')
+  //   // limit(40)
+  // );
+  // const unsub = onSnapshot(q, (querySnapshot) => {
+  //   querySnapshot.forEach((doc) => {
+  //     msgs.push({ id: doc.id, ...doc.data() });
+  //   });
+  // });
+  const q = query(
+    collection(db, 'users', currentUser.uid, 'friends', friendId, 'messages'),
+    orderBy('timestamp', 'asc')
+  );
+
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    msgs.push({ id: doc.id, ...doc.data() });
+  });
+  return msgs;
+};
+
+//COMMENT SEND MESSAGE
+export const sendMessage = async (
+  currentUserDoc,
+  friendId,
+  msg,
+  otherInfo = {}
+) => {
+  await addDoc(
+    collection(db, 'users', currentUserDoc.id, 'friends', friendId, 'messages'),
+    {
+      message: msg,
+      name: currentUserDoc.displayName,
+      timestamp: serverTimestamp(),
+      ...otherInfo,
+    }
+  );
+  await addDoc(
+    collection(db, 'users', friendId, 'friends', currentUserDoc.id, 'messages'),
+    {
+      message: msg,
+      name: currentUserDoc.displayName,
+      timestamp: serverTimestamp(),
+      ...otherInfo,
+    }
   );
 };
 

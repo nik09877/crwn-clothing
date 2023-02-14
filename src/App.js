@@ -12,6 +12,8 @@ import Profile from './routes/profile/profile.component';
 import Users from './routes/users/users.component';
 import Notifications from './routes/notifications/notifications.component';
 import SeeTwins from './routes/see-twins/see-twins.component';
+import Chat from './routes/chat/chat.component';
+import ChatRoom from './routes/chat-room/chat-room.component';
 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useContext(UserContext);
@@ -83,6 +85,22 @@ const App = () => {
           element={
             <PrivateRoute>
               <SeeTwins />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='chat'
+          element={
+            <PrivateRoute>
+              <Chat />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='chat/:roomId'
+          element={
+            <PrivateRoute>
+              <ChatRoom />
             </PrivateRoute>
           }
         />
