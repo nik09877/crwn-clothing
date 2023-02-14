@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import { CartContext } from '../../contexts/cart.context';
 
@@ -10,9 +10,13 @@ import {
   HeaderBlock,
   Total,
 } from './checkout.styles';
+import ShareBasketModal from '../../components/share-basket-modal/share-basket-modal.component';
 
 const Checkout = () => {
   const { cartItems, cartTotal } = useContext(CartContext);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShowModal = () => setShowModal((prev) => !prev);
 
   return (
     <CheckoutContainer>
@@ -37,6 +41,19 @@ const Checkout = () => {
         <CheckoutItem key={cartItem.id} cartItem={cartItem} />
       ))}
       <Total>Total: ${cartTotal}</Total>
+      <div className='share-basket'>
+        <button
+          type='button'
+          className='share-basket-btn'
+          onClick={handleShowModal}
+        >
+          Share Cart
+        </button>
+      </div>
+      <ShareBasketModal
+        handleShowModal={handleShowModal}
+        showModal={showModal}
+      />
     </CheckoutContainer>
   );
 };

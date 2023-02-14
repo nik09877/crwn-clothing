@@ -450,16 +450,61 @@ export const getTwins = async (currentUser, product, setTwins) => {
   });
 };
 
+//COMMENT CHECK FRIEND's BASKET ACCESS PERMISSIONS
+export const checkBasketAccessPermission = async (
+  currentUser,
+  friend,
+  type
+) => {
+  const docSnap = await getDoc(
+    doc(db, 'users', friend.id, 'friends', currentUser.uid)
+  );
+  if (type === 'read') return docSnap.data().read;
+  return docSnap.data().write;
+};
+
+//COMMENT UPDATE SHARE BASKET PERMISSIONS
+export const updateShareBasketPermission = (currentUser, friend, type) => {
+  const docRef = doc(db, 'users', friend.id, 'friends', currentUser.uid);
+  switch (type) {
+    case 'GIVE_READ_ACCESS':
+      setDoc(docRef, { read: true, write: false }, { merge: true });
+      break;
+    case 'GIVE_COMPLETE_ACCESS':
+      setDoc(docRef, { read: true, write: true }, { merge: true });
+      break;
+    case 'REVOKE_EDIT_ACCESS':
+      updateDoc(docRef, { write: false });
+      break;
+    case 'REVOKE_COMPLETE_ACCESS':
+      updateDoc(docRef, { read: false, write: false });
+      break;
+    default:
+      break;
+  }
+};
+
+//COMMENT GET ALL THE FRIENDS THAT HAVE SHARED THEIR BASKETS
+export const getSharedBasketFriends = async (currentUser) => {
+  const friends = [];
+  const querySnapshot = await getDocs(
+    collection(db, 'users', currentUser.uid, 'friends')
+  );
+  querySnapshot.forEach((doc) => {
+    const curFrnd = { id: doc.id, ...doc.data() };
+    if (curFrnd?.read || curFrnd?.write) friends.push(curFrnd);
+  });
+  return friends;
+};
+
 //COMMENT UPLOAD PROFILE PIC TO STORAGE
 export const uploadProfilePic = async (currentUser, file, setProfilePic) => {
   const metadata = {
     contentType: 'image/jpeg',
   };
-
   // Upload file and metadata to the object 'images/mountains.jpg'
   const storageRef = ref(storage, currentUser.email + '-photo-' + file.name);
   const uploadTask = uploadBytesResumable(storageRef, file, metadata);
-
   // Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     'state_changed',

@@ -5,14 +5,13 @@ import { UserContext } from '../../contexts/user.context';
 import Notification from '../../components/notification/notification.component';
 
 const Notifications = () => {
-  const forceRender = useForceRender();
   const [friendRequests, setFriendRequests] = useState([]);
   const { currentUser } = useContext(UserContext);
 
+  const getRequests = async () => {
+    await getFriendRequests(currentUser, setFriendRequests);
+  };
   useEffect(() => {
-    const getRequests = async () => {
-      await getFriendRequests(currentUser, setFriendRequests);
-    };
     getRequests();
   }, []);
 
@@ -27,7 +26,7 @@ const Notifications = () => {
             <Notification
               key={friendRequest.id}
               friendRequest={friendRequest}
-              forceRender={forceRender}
+              getRequests={getRequests}
             />
           ))}
         </Fragment>

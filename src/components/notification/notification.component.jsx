@@ -5,17 +5,17 @@ import {
   declineFriendRequest,
 } from '../../utils/firebase/firebase.utils';
 
-const Notification = ({ friendRequest, forceRender }) => {
+const Notification = ({ friendRequest, getRequests }) => {
   const { currentUser } = useContext(UserContext);
   const { requestName, requestEmail, requestPic } = friendRequest;
 
   const handleAccept = async () => {
     await acceptFriendRequest(currentUser, friendRequest);
-    forceRender();
+    await getRequests();
   };
   const handleDecline = async () => {
     await declineFriendRequest(currentUser, friendRequest);
-    forceRender();
+    await getRequests();
   };
 
   return (

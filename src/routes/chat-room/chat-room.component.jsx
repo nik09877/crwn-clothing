@@ -21,17 +21,18 @@ import {
 } from '@chatscope/chat-ui-kit-react';
 import { UserContext } from '../../contexts/user.context';
 import {
+  db,
   getFriend,
   getFriends,
-  getMessages,
   getUser,
   sendMessage,
 } from '../../utils/firebase/firebase.utils';
 import SideBarConversation from '../../components/chat-sidebar-conversation/chat-sidebar-conversation.component';
 import { useParams } from 'react-router-dom';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const ChatRoom = () => {
-  const [query, setQuery] = useState('');
+  const [queryVal, setQueryVal] = useState('');
   const [messageInputValue, setMessageInputValue] = useState('');
   const [friends, setFriends] = useState([]);
   const [currentFriend, setCurrentFriend] = useState(null);
@@ -41,17 +42,12 @@ const ChatRoom = () => {
   const { roomId } = useParams();
 
   const handleQueryChange = (val) => {
-    setQuery(val);
+    setQueryVal(val);
   };
 
   const handleSend = async () => {
     await sendMessage(currentUserDoc, roomId, messageInputValue);
     setMessageInputValue('');
-    await getAllmsgs();
-  };
-
-  const getAllmsgs = async () => {
-    setMessages(await getMessages(currentUser, roomId));
   };
 
   useEffect(() => {
@@ -69,7 +65,20 @@ const ChatRoom = () => {
   }, [roomId]);
 
   useEffect(() => {
-    getAllmsgs();
+    const q = query(
+      collection(db, 'users', currentUser.uid, 'friends', roomId, 'messages'),
+      orderBy('timestamp', 'asc')
+      // limit(40)
+    );
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      const msgs = [];
+      querySnapshot.forEach((doc) => {
+        msgs.push({ id: doc.id, ...doc.data() });
+      });
+      setMessages(msgs);
+    });
+
+    return unsub;
   }, [roomId]);
 
   useEffect(() => {
@@ -80,7 +89,7 @@ const ChatRoom = () => {
   }, []);
 
   const filteredfriends = friends.filter((friend) =>
-    friend.friendName.toLowerCase().includes(query.toLowerCase())
+    friend.friendName.toLowerCase().includes(queryVal.toLowerCase())
   );
 
   return (
@@ -100,7 +109,7 @@ const ChatRoom = () => {
               fontSize: '18px',
             }}
             onChange={handleQueryChange}
-            onClearClick={() => setQuery('')}
+            onClearClick={() => setQueryVal('')}
           />
           <ConversationList>
             {filteredfriends &&
