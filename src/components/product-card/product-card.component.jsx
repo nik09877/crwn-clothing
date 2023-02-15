@@ -12,43 +12,22 @@ import {
   Name,
   Price,
 } from './product-card.styles';
-import { useNavigate } from 'react-router-dom';
 
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-import Typography from '@mui/material/Typography';
-import Rating from '@mui/material/Rating';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import ShareProductModal from '../share-product-modal/share-product-modal.component';
+import SeeTwinsModal from '../see-twins-modal/see-twins-modal.component';
 
 const ProductCard = ({ product }) => {
   const [twins, setTwins] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showTwins, setShowTwins] = useState(false);
   const { name, price, imageUrl } = product;
   const { addItemToCart } = useContext(CartContext);
   const { currentUser } = useContext(UserContext);
-  const navigate = useNavigate();
 
   const addProductToCart = async () => await addItemToCart(product);
 
   const handleShowModal = () => setShowModal((prev) => !prev);
-  const handleShowTwins = () => {
-    if (twins.length > 0) {
-      navigate('/see-twins', { state: twins });
-    }
-  };
+  const handleShowTwins = () => setShowTwins((prev) => !prev);
 
   useEffect(() => {
     const findTwins = async () => {
@@ -64,7 +43,7 @@ const ProductCard = ({ product }) => {
         <div onClick={handleShowTwins}>Twin count:{twins.length}</div>
         <Name>{name}</Name>
         <Price>{price}</Price>
-        <div onClick={handleShowModal}>Review</div>
+        <div onClick={handleShowModal}>Share</div>
       </Footer>
       <Button
         buttonType={BUTTON_TYPE_CLASSES.inverted}
@@ -72,23 +51,16 @@ const ProductCard = ({ product }) => {
       >
         Add to cart
       </Button>
-      {/*showModal && (
-        <Modal
-          aria-labelledby='transition-modal-title'
-          aria-describedby='transition-modal-description'
-          open={showModal}
-          onClose={handleShowModal}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
-        >
-          <Fade in={showModal}>
-            <Box sx={style}></Box>
-          </Fade>
-        </Modal>
-        )*/}
+      <ShareProductModal
+        showModal={showModal}
+        handleShowModal={handleShowModal}
+        product={product}
+      />
+      <SeeTwinsModal
+        showModal={showTwins}
+        handleShowModal={handleShowTwins}
+        twins={twins}
+      />
     </ProductCartContainer>
   );
 };

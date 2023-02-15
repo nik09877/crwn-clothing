@@ -11,7 +11,6 @@ import Checkout from './routes/checkout/checkout.component';
 import Profile from './routes/profile/profile.component';
 import Users from './routes/users/users.component';
 import Notifications from './routes/notifications/notifications.component';
-import SeeTwins from './routes/see-twins/see-twins.component';
 import Chat from './routes/chat/chat.component';
 import ChatRoom from './routes/chat-room/chat-room.component';
 import SharedBasket from './routes/shared-basket/shared-basket.component';
@@ -79,14 +78,6 @@ const App = () => {
           element={
             <PrivateRoute>
               <Notifications />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='see-twins'
-          element={
-            <PrivateRoute>
-              <SeeTwins />
             </PrivateRoute>
           }
         />
