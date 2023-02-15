@@ -15,6 +15,7 @@ import Chat from './routes/chat/chat.component';
 import ChatRoom from './routes/chat-room/chat-room.component';
 import SharedBasket from './routes/shared-basket/shared-basket.component';
 import SharedBaskets from './routes/shared-baskets/shared-baskets.component';
+import SurveyResults from './routes/survey-results/survey-results.component';
 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useContext(UserContext);
@@ -110,6 +111,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <SharedBasket />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='survey-results' //basketId denotes whose basket it is
+          element={
+            <PrivateRoute>
+              <SurveyResults />
             </PrivateRoute>
           }
         />
