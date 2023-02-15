@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 
@@ -30,6 +30,7 @@ import {
 import SideBarConversation from '../../components/chat-sidebar-conversation/chat-sidebar-conversation.component';
 import { useParams } from 'react-router-dom';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import FillOutSurveyModal from '../../components/fill-out-survey-modal/fill-out-survey-modal.component';
 
 const ChatRoom = () => {
   const [queryVal, setQueryVal] = useState('');
@@ -38,9 +39,11 @@ const ChatRoom = () => {
   const [currentFriend, setCurrentFriend] = useState(null);
   const [messages, setMessages] = useState([]);
   const [currentUserDoc, setCurrentUserDoc] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const { currentUser } = useContext(UserContext);
   const { roomId } = useParams();
 
+  const handleShowModal = () => setShowModal((prev) => !prev);
   const handleQueryChange = (val) => {
     setQueryVal(val);
   };
@@ -68,7 +71,6 @@ const ChatRoom = () => {
     const q = query(
       collection(db, 'users', currentUser.uid, 'friends', roomId, 'messages'),
       orderBy('timestamp', 'asc')
-      // limit(40)
     );
     const unsub = onSnapshot(q, (querySnapshot) => {
       const msgs = [];
@@ -138,30 +140,70 @@ const ChatRoom = () => {
           </ConversationHeader>
           <MessageList>
             {messages &&
-              messages.map((msg) => (
-                <Message
-                  key={msg.id}
-                  model={{
-                    message: `${msg.message}`,
-                    sentTime: '15 mins ago',
-                    sender: 'Zoe',
-                    direction: `${
-                      msg.name === currentUserDoc.displayName
-                        ? 'outgoing'
-                        : 'incoming'
-                    }`,
-                    position: 'single',
-                  }}
-                >
-                  <Avatar
-                    src={
-                      msg.name === currentUserDoc.displayName
-                        ? currentUserDoc.profilePic
-                        : currentFriend.friendProfilePic
-                    }
-                  />
-                </Message>
-              ))}
+              messages.map((msg, idx) => {
+                const direction =
+                  msg.name === currentUserDoc.displayName
+                    ? 'outgoing'
+                    : 'incoming';
+                if (!msg.imageUrl || direction === 'outgoing')
+                  return (
+                    <Message
+                      onClick={msg.imageUrl && handleShowModal}
+                      key={msg.id}
+                      model={{
+                        message: `${msg.message}`,
+                        sentTime: '15 mins ago',
+                        sender: 'Zoe',
+                        direction: `${
+                          msg.name === currentUserDoc.displayName
+                            ? 'outgoing'
+                            : 'incoming'
+                        }`,
+                        position: 'single',
+                      }}
+                    >
+                      <Avatar
+                        src={
+                          msg.name === currentUserDoc.displayName
+                            ? currentUserDoc.profilePic
+                            : currentFriend.friendProfilePic
+                        }
+                      />
+                    </Message>
+                  );
+                return (
+                  <Fragment key={idx}>
+                    <Message
+                      onClick={msg.imageUrl && handleShowModal}
+                      key={msg.id}
+                      model={{
+                        message: `${msg.message}`,
+                        sentTime: '15 mins ago',
+                        sender: 'Zoe',
+                        direction: `${
+                          msg.name === currentUserDoc.displayName
+                            ? 'outgoing'
+                            : 'incoming'
+                        }`,
+                        position: 'single',
+                      }}
+                    >
+                      <Avatar
+                        src={
+                          msg.name === currentUserDoc.displayName
+                            ? currentUserDoc.profilePic
+                            : currentFriend.friendProfilePic
+                        }
+                      />
+                    </Message>
+                    <FillOutSurveyModal
+                      showModal={showModal}
+                      handleShowModal={handleShowModal}
+                      msg={msg}
+                    />
+                  </Fragment>
+                );
+              })}
           </MessageList>
           <MessageInput
             placeholder='Type message here'

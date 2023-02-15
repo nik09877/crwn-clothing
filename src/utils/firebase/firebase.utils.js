@@ -497,6 +497,42 @@ export const getSharedBasketFriends = async (currentUser) => {
   return friends;
 };
 
+//COMMENT ADD PRODUCT TO SURVEY RESULTS
+export const addToSurveyResults = async (userId, itemId, itemInfo) => {
+  const productId = String(itemId);
+  await setDoc(doc(db, 'users', userId, 'surveyResults', productId), {
+    itemId: itemInfo.id,
+    itemName: itemInfo.name,
+    itemImage: itemInfo.image,
+    itemPrice: itemInfo.price,
+  });
+};
+
+//COMMENT ADD REVIEW FOR A SPECIFIC PRODUCT IN SURVEY RESULTS
+export const submitReview = async (userId, itemId, currentUser, info) => {
+  const currentUserDoc = await getUser(currentUser);
+  const productId = String(itemId);
+  await setDoc(
+    doc(
+      db,
+      'users',
+      userId,
+      'surveyResults',
+      productId,
+      'reviews',
+      currentUser.uid
+    ),
+    {
+      reviewerName: currentUserDoc.displayName,
+      productQuality: info.quality,
+      productFitting: info.fitting,
+      productValMoney: info.valMoney,
+      productMaterial: info.material,
+      productFeedback: info.feedback,
+    }
+  );
+};
+
 //COMMENT UPLOAD PROFILE PIC TO STORAGE
 export const uploadProfilePic = async (currentUser, file, setProfilePic) => {
   const metadata = {

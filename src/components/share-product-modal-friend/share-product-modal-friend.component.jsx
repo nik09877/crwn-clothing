@@ -8,7 +8,7 @@ const ShareProductModalFriend = ({ friend, product }) => {
   const [currentUserDoc, setCurrentUserDoc] = useState({});
 
   const handleShare = async () => {
-    const msg = 'Click Me To Share Your Review of This Product!';
+    const msg = 'Click To Share Your Review of This Product!';
     const otherInfo = {
       imageUrl: product.imageUrl,
       productId: product.id,
