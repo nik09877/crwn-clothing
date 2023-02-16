@@ -5,6 +5,8 @@
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@chatscope/chat-ui-kit-styles": "^1.4.0",
+    "@daily-co/daily-js": "^0.38.0",
+    "@daily-co/daily-react": "^0.7.2",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
@@ -17,13 +19,15 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
+    "recoil": "^0.7.6",
     "sass": "^1.58.0",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
+    "netlify-build": "CI=false sed -i.bak s/REACT_APP_DAILY_API_KEY_PLACEHOLDER/${REACT_APP_DAILY_API_KEY}/g netlify.toml && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

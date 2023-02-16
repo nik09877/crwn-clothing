@@ -1,0 +1,113 @@
+.hair-check {
+  background: white;
+  border: 1px solid grey;
+  padding: 1rem;
+  border-radius: 4px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  justify-content: center;
+
+  p {
+    font-size: 16px;
+    margin: 16px;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    color: var(--turquoise);
+  }
+
+  p.small {
+    color: var(--dark-grey);
+    font-size: 12px;
+  }
+
+  button {
+    background-color: var(--turquoise);
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 12px;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .api-error {
+    background: var(--dark-blue-border);
+    width: 480px;
+    height: 270px;
+    display: inline-flex;
+    flex-direction: column;
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    padding: 3rem;
+    box-sizing: border-box;
+    border-radius: 4px;
+  }
+
+  .api-error p {
+    color: var(--white);
+  }
+
+  .api-error h1 {
+    color: var(--red-dark);
+  }
+
+  .api-error a,
+  .api-error a:visited {
+    color: var(--white);
+  }
+}
+
+.hair-check video {
+  max-width: 480px;
+}
+
+.hair-check label {
+  display: block;
+  color: var(--dark-grey);
+  font-size: 12px;
+  margin: 1em 0 0.5em 0;
+  line-height: 14px;
+}
+
+.hair-check input,
+.hair-check select {
+  border: 1px solid var(--grey);
+  padding: 0.5em;
+  border-radius: 4px;
+  color: var(--dark-blue);
+  width: 100%;
+}
+
+.hair-check h1 {
+  font-size: 1em;
+  text-align: center;
+  margin-bottom: 1em;
+  color: var(--dark-blue);
+}
+
+.hair-check button {
+  margin-top: 2em;
+}
+
+.hair-check button + button {
+  margin-top: 0;
+}
+
+.cancel-call {
+  background: var(--white);
+}

@@ -1,0 +1,144 @@
+.chat {
+  background: var(--white);
+  position: absolute;
+  top: 4rem;
+  bottom: 4rem;
+  right: 0;
+  overflow-y: auto;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-left: 1px solid var(--grey);
+
+  p {
+    font-size: 16px;
+    margin: 16px;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    color: var(--turquoise);
+  }
+
+  p.small {
+    color: var(--dark-grey);
+    font-size: 12px;
+  }
+
+  button {
+    background-color: var(--turquoise);
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 12px;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .api-error {
+    background: var(--dark-blue-border);
+    width: 480px;
+    height: 270px;
+    display: inline-flex;
+    flex-direction: column;
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    padding: 3rem;
+    box-sizing: border-box;
+    border-radius: 4px;
+  }
+
+  .api-error p {
+    color: var(--white);
+  }
+
+  .api-error h1 {
+    color: var(--red-dark);
+  }
+
+  .api-error a,
+  .api-error a:visited {
+    color: var(--white);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .chat {
+    width: 100%;
+    z-index: 3; /* overlay the usernames in the Call screen*/
+  }
+}
+
+.add-message {
+  padding: 1rem;
+  border-top: 1px solid var(--grey);
+  border-bottom: 1px solid var(--grey);
+}
+
+.chat-messages {
+  padding: 1rem;
+  margin: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.chat-message {
+  list-style-type: none;
+  margin-bottom: 1rem;
+}
+
+.chat-message-author {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.chat-message-body {
+  text-align: left;
+  margin: 0;
+  display: inline;
+  color: var(--dark-grey);
+  font-size: 14px;
+}
+
+.chat-form {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--grey);
+}
+
+.chat-input {
+  background: transparent;
+  border: 0;
+  flex-grow: 1;
+  padding: 0.5rem;
+}
+
+.chat-submit-button {
+  background: transparent;
+}
+
+.close-chat {
+  background: var(--turquoise);
+  border: 1px solid var(--grey);
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  align-self: end;
+  font-weight: normal;
+}
+
+.close-chat:hover {
+  background: var(--grey);
+  border: 1px solid var(--dark-blue-border);
+}
