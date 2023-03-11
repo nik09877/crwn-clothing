@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { getFriends } from '../../utils/firebase/firebase.utils';
 import { UserContext } from '../../contexts/user.context';
 import ShareBasketModalFriend from '../share-basket-modal-friend/share-basket-modal-friend.component';
+import './share-basket-modal.styles.scss';
 
 const style = {
   position: 'absolute',
@@ -21,6 +22,15 @@ const style = {
   p: 4,
 };
 
+const ShareBasketModalFriends = ({ friends }) => {
+  return (
+    <div className='share-basket-modal-friends-container'>
+      {friends.map((friend) => (
+        <ShareBasketModalFriend key={friend.id} friend={friend} />
+      ))}
+    </div>
+  );
+};
 const ShareBasketModal = ({ showModal, handleShowModal }) => {
   const [friends, setFriends] = useState([]);
   const { currentUser } = useContext(UserContext);
@@ -52,13 +62,15 @@ const ShareBasketModal = ({ showModal, handleShowModal }) => {
             overflowY: 'scroll',
           }}
         >
-          <div>
-            <button onClick={handleShowModal}>X</button>
+          <div className='share-basket-modal-close-btn-container'>
+            <button
+              className='share-basket-modal-close-btn'
+              onClick={handleShowModal}
+            >
+              X
+            </button>
           </div>
-          {friends &&
-            friends.map((friend) => (
-              <ShareBasketModalFriend key={friend.id} friend={friend} />
-            ))}
+          {friends && <ShareBasketModalFriends friends={friends} />}
         </Box>
       </Fade>
     </Modal>

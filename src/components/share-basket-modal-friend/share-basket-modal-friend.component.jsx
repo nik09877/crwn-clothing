@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../contexts/user.context';
 import {
   checkBasketAccessPermission,
   updateShareBasketPermission,
 } from '../../utils/firebase/firebase.utils';
+import './share-basket-modal-friend.styles.scss';
 
 const ShareBasketModalFriend = ({ friend }) => {
   const { friendName, friendEmail, friendProfilePic } = friend;
@@ -70,64 +71,56 @@ const ShareBasketModalFriend = ({ friend }) => {
 
   return (
     <div className='share-basket-modal-friend-container'>
-      <div className='info'>
-        <img src={friendProfilePic} alt='friend' />
+      <div className='share-basket-modal-friend-img-container'>
+        <img
+          className='share-basket-modal-friend-img'
+          src={friendProfilePic}
+          alt='friend'
+        />
+      </div>
+      <div className='share-basket-modal-friend-info-container'>
         <p>{friendName}</p>
         <p>{friendEmail}</p>
       </div>
-      <div className='permissions'>
+      <div className='permissions-container'>
         {hasWritePermission ? (
-          <div>
-            <button
-              variant='flat'
-              style={{ margin: 10 }}
-              onClick={revokeEditAccess}
-            >
+          <Fragment>
+            <button className='permission-btn' onClick={revokeEditAccess}>
               Revoke Edit Access
             </button>
-            <button
-              variant='flat'
-              style={{ margin: 10 }}
-              onClick={revokeCompleteAccess}
-            >
-              Revoke Complete Access
+            <button className='permission-btn' onClick={revokeCompleteAccess}>
+              Revoke Full Access
             </button>
-          </div>
+          </Fragment>
         ) : (
           [
             hasReadPermission ? (
-              <div>
-                <button
-                  variant='flat'
-                  style={{ margin: 10 }}
-                  onClick={giveEditAccess}
-                >
+              <Fragment>
+                <button className='permission-btn' onClick={giveEditAccess}>
                   Give Edit Access
                 </button>
                 <button
-                  variant='flat'
-                  style={{ margin: 10 }}
+                  className='permission-btn'
                   onClick={revokeCompleteAccess}
                 >
-                  Revoke Complete Access
+                  Revoke Full Access
                 </button>
-              </div>
+              </Fragment>
             ) : (
-              <div>
-                <input
-                  type='checkbox'
-                  onChange={toggleEditAccess}
-                  defaultChecked={editAccess}
-                />
-                &nbsp; Give edit access
-                <button
-                  variant='flat'
-                  style={{ margin: 10 }}
-                  onClick={handleShareBasket}
-                >
-                  Share Your Basket
+              <Fragment>
+                <div className='permission-btn'>
+                  <input
+                    name='edit-access'
+                    type='checkbox'
+                    onChange={toggleEditAccess}
+                    defaultChecked={editAccess}
+                  />
+                  <label htmlFor='edit-access'>Give edit access</label>
+                </div>
+                <button className='permission-btn' onClick={handleShareBasket}>
+                  Share Your Cart
                 </button>
-              </div>
+              </Fragment>
             ),
           ]
         )}

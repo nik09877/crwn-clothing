@@ -9,6 +9,7 @@ import {
   submitReview,
 } from '../../utils/firebase/firebase.utils';
 import { UserContext } from '../../contexts/user.context';
+import './fill-out-survey-modal.styles.scss';
 
 const style = {
   position: 'absolute',
@@ -70,68 +71,98 @@ const FillOutSurveyModal = ({ showModal, handleShowModal, msg }) => {
             overflowY: 'scroll',
           }}
         >
-          <div>
-            <button onClick={handleShowModal}>X</button>
+          <div className='fill-out-survey-modal-close-btn-container'>
+            <button
+              className='fill-out-survey-modal-close-btn'
+              onClick={handleShowModal}
+            >
+              X
+            </button>
           </div>
-          <div className='product-info'>
-            <img src={imageUrl} alt='product' />
-            <p>{productName}</p>
-            <p>{productPrice}</p>
-          </div>
-          <div className='fill-out-survey-container'>
-            <Typography component='legend'>
-              Please rate the quality of this product:
-            </Typography>
-            <Rating
-              name='simple-controlled'
-              value={quality}
-              onChange={(event, newValue) => {
-                setQuality(newValue);
-              }}
-            />
-            <Typography component='legend'>
-              Please rate this product on the basis of it's comfortableness and
-              fitting:
-            </Typography>
-            <Rating
-              name='simple-controlled'
-              value={fitting}
-              onChange={(event, newValue) => {
-                setFitting(newValue);
-              }}
-            />
-            <Typography component='legend'>
-              Is it a good value for money?
-            </Typography>
-            <Rating
-              name='simple-controlled'
-              value={valMoney}
-              onChange={(event, newValue) => {
-                setValMoney(newValue);
-              }}
-            />
-            <Typography component='legend'>
-              Is the material and color of this product good?
-            </Typography>
-            <Rating
-              name='simple-controlled'
-              value={material}
-              onChange={(event, newValue) => {
-                setMaterial(newValue);
-              }}
-            />
-            <Typography component='legend'>
-              What is you overall satisfaction with the product?
-            </Typography>
-            <input
-              type='text'
-              placeholder='Write Feedback...'
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-            />
-          </div>
-          <div>
-            <button onClick={handleSubmit}>Submit Review</button>
+          <div className='fill-out-survey-modal-product-info-wrapper'>
+            <div className='fill-out-survey-modal-product-info-container'>
+              <div className='fill-out-survey-modal-prod-img-container'>
+                <img
+                  className='fill-out-survey-modal-prod-img'
+                  src={imageUrl}
+                  alt='product'
+                />
+              </div>
+              <div className='fill-out-survey-modal-prod-details-container'>
+                <p>{productName}</p>
+                <p>{productPrice}$</p>
+              </div>
+            </div>
+            <div className='fill-out-survey-container'>
+              <div className='fill-out-survey-individual-container'>
+                <Typography component='legend'>
+                  Please rate the quality of this product:
+                </Typography>
+                <Rating
+                  name='simple-controlled'
+                  value={quality}
+                  onChange={(event, newValue) => {
+                    setQuality(newValue);
+                  }}
+                />
+              </div>
+              <div className='fill-out-survey-individual-container'>
+                <Typography component='legend'>
+                  Please rate this product on the basis of it's comfortableness
+                  and fitting:
+                </Typography>
+                <Rating
+                  name='simple-controlled'
+                  value={fitting}
+                  onChange={(event, newValue) => {
+                    setFitting(newValue);
+                  }}
+                />
+              </div>
+              <div className='fill-out-survey-individual-container'>
+                <Typography component='legend'>
+                  Is it a good value for money?
+                </Typography>
+                <Rating
+                  name='simple-controlled'
+                  value={valMoney}
+                  onChange={(event, newValue) => {
+                    setValMoney(newValue);
+                  }}
+                />
+              </div>
+              <div className='fill-out-survey-individual-container'>
+                <Typography component='legend'>
+                  Is the material and color of this product good?
+                </Typography>
+                <Rating
+                  name='simple-controlled'
+                  value={material}
+                  onChange={(event, newValue) => {
+                    setMaterial(newValue);
+                  }}
+                />
+              </div>
+              <div className='fill-out-survey-individual-container'>
+                <Typography component='legend'>
+                  What is you overall satisfaction with the product?
+                </Typography>
+                <input
+                  type='text'
+                  placeholder='Write Feedback...'
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className='fill-out-survey-modal-btn-container'>
+              <button
+                className='fill-out-survey-modal-btn'
+                onClick={handleSubmit}
+              >
+                Submit Review
+              </button>
+            </div>
           </div>
         </Box>
       </Fade>

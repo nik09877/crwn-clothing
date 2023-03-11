@@ -1,6 +1,6 @@
 .video-call {
   background-color: var(--darkest-blue);
-  min-height: 100vh;
+  min-height: calc(100vh - 135px);
   display: grid;
   /* this is where we're dividing our app in 3 rows: header, call, and tray. The meeting information
     is outside the app's document flow.*/

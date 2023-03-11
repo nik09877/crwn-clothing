@@ -28,7 +28,7 @@ import {
   sendMessage,
 } from '../../utils/firebase/firebase.utils';
 import SideBarConversation from '../../components/chat-sidebar-conversation/chat-sidebar-conversation.component';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import FillOutSurveyModal from '../../components/fill-out-survey-modal/fill-out-survey-modal.component';
 
@@ -134,7 +134,9 @@ const ChatRoom = () => {
             />
             <ConversationHeader.Actions>
               <VoiceCallButton />
-              <VideoCallButton />
+              <Link to='/video-call'>
+                <VideoCallButton />
+              </Link>
               <EllipsisButton orientation='vertical' />
             </ConversationHeader.Actions>
           </ConversationHeader>

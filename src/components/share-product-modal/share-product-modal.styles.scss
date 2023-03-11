@@ -1,0 +1,15 @@
+.share-product-modal-close-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  .share-product-modal-close-btn {
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 3x;
+  }
+}
+.share-product-modal-friends-container {
+  padding: 20px;
+}

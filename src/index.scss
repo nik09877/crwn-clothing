@@ -9,6 +9,21 @@
   --green: #72cc18;
   --red-dark: #f63135;
   --turquoise: #1bebb9;
+
+  --navigationBGColor: rgb(255, 255, 255);
+  --navigationBorderColor: rgb(255, 255, 255);
+  --navigationTextColor: rgb(0, 0, 0);
+  --navigationHoverBGColor: rgb(153, 153, 153);
+  --contentBGColor: rgb(255, 255, 255, 0);
+  --contentTextColor: rgb(0, 0, 0);
+  --primaryButtonBGColor: rgb(0, 0, 0);
+  --primaryButtonHoverBGColor: rgb(102, 102, 102);
+  --primaryButtonTextColor: rgb(255, 255, 255);
+  --secondaryButtonBGColor: rgb(0, 0, 0);
+  --secondaryButtonTextColor: rgb(0, 0, 0);
+  --badgeBGColor: rgb(0, 0, 0);
+  --badgeTextColor: rgb(255, 255, 255);
+  --linkColor: rgb(0, 0, 0);
 }
 
 body {

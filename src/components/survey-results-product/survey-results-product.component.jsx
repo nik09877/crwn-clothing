@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SurveyResultsModal from '../survey-results-modal/survey-results-modal.component';
+import './survey-results-product.styles.scss';
 
 const SurveyResultsProduct = ({ product }) => {
   const { id, itemImage, itemName, itemPrice } = product;
@@ -8,15 +9,21 @@ const SurveyResultsProduct = ({ product }) => {
   const handleShowModal = () => setShowModal((prev) => !prev);
 
   return (
-    <div>
-      <div>
-        <img src={itemImage} alt='product' />
-        <p>{itemPrice}</p>
+    <div className='survey-results-product-container'>
+      <div className='survey-results-product-image-container'>
+        <img
+          className='survey-results-product-image'
+          src={itemImage}
+          alt='product'
+        />
+      </div>
+      <div className='survey-results-product-info-container'>
         <p>{itemName}</p>
+        <p>{itemPrice}$</p>
       </div>
-      <div>
-        <button onClick={handleShowModal}>See Results</button>
-      </div>
+      <button className='see-survey-results-btn' onClick={handleShowModal}>
+        See Results
+      </button>
       <SurveyResultsModal
         showModal={showModal}
         handleShowModal={handleShowModal}

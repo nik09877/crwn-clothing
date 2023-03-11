@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 const SideBarConversation = ({ friend }) => {
   const { id, friendName, friendProfilePic } = friend;
   const navigate = useNavigate();
-
   const handleClick = () => {
     navigate(`/chat/${id}`);
   };

@@ -1,0 +1,48 @@
+.survey-results-product-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px #00000029, 0 0 5px #0000001f;
+  transition: all 1.2s ease;
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 5px #00000029, 0 0 10px #0000001f;
+  }
+  .survey-results-product-image-container {
+    height: 280px;
+    width: 100%;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    overflow: hidden;
+    .survey-results-product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .survey-results-product-info-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+  }
+  .see-survey-results-btn {
+    background-color: var(--primaryButtonBGColor);
+    color: #fff;
+    text-align: center;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 1s ease;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    width: 95%;
+    &:hover {
+      box-shadow: 0 1px 1px #00000029, 0 0 5px #0000001f;
+      background-color: #fff;
+      color: #000;
+      font-weight: 500;
+    }
+  }
+}

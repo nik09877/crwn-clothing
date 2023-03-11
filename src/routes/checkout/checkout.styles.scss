@@ -1,0 +1,19 @@
+.share-basket-btn-container {
+  width: 30%;
+  .share-basket-btn {
+    width: 100%;
+    background-color: var(--primaryButtonBGColor);
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 1s ease;
+    border-radius: 3px;
+    &:hover {
+      box-shadow: 0 1px 1px #00000029, 0 0 5px #0000001f;
+      background-color: #fff;
+      color: #000;
+      font-weight: 500;
+    }
+  }
+}

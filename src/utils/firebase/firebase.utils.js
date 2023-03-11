@@ -25,7 +25,9 @@ import {
   orderBy,
   limit,
   addDoc,
-  serverTimestamp, //for real time data fetching
+  serverTimestamp,
+  arrayUnion,
+  arrayRemove, //for real time data fetching
 } from 'firebase/firestore';
 
 import {
@@ -39,7 +41,7 @@ import {
 import { firebaseConfig } from '../../firebase-secret';
 
 const firebaseApp = initializeApp(firebaseConfig);
-const storage = getStorage();
+export const storage = getStorage();
 
 //////////////////////////////////////////////////////////////
 //SIGN IN WITH GOOGLE
@@ -247,6 +249,11 @@ export const sendFriendRequest = async (currentUser, friend) => {
     // { merge: true }
   );
 };
+//COMMENT DELETE FRIEND
+export const deleteFriend = async (currentUser, friend) => {
+  await deleteDoc(doc(db, 'users', currentUser.uid, 'friends', friend.id));
+  await deleteDoc(doc(doc(db, 'users', friend.id, 'friends', currentUser.uid)));
+};
 
 //COMMENT ACCEPT FRIEND REQUEST AND ADD FRIEND
 export const acceptFriendRequest = async (currentUser, friend) => {
@@ -436,8 +443,8 @@ export const getTwins = async (currentUser, product, setTwins) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const { friendName, friendEmail, friendProfilePic } = friend;
-      twins.push({ friendName, friendEmail, friendProfilePic });
+      const { friendName, friendEmail, friendProfilePic, id } = friend;
+      twins.push({ friendName, friendEmail, friendProfilePic, id });
     }
     setTwins(twins);
   });
@@ -532,7 +539,10 @@ export const uploadProfilePic = async (currentUser, file, setProfilePic) => {
     contentType: 'image/jpeg',
   };
   // Upload file and metadata to the object 'images/mountains.jpg'
-  const storageRef = ref(storage, currentUser.email + '-photo-' + file.name);
+  const storageRef = ref(
+    storage,
+    'profilePics/' + currentUser.email + '-photo-' + file.name
+  );
   const uploadTask = uploadBytesResumable(storageRef, file, metadata);
   // Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
@@ -564,6 +574,41 @@ export const uploadProfilePic = async (currentUser, file, setProfilePic) => {
   );
 };
 
+//COMMENT UPLOAD PROFILE PIC TO STORAGE
+export const uploadCoverPic = async (currentUser, file, setCoverPic) => {
+  const metadata = {
+    contentType: 'image/jpeg',
+  };
+  // Upload file and metadata to the object 'images/mountains.jpg'
+  const storageRef = ref(
+    storage,
+    'coverPics/' + currentUser.email + '-cover-photo-' + file.name
+  );
+  const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+  // Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    'state_changed',
+    (snapshot) => {},
+    (error) => {
+      console.log(error);
+    },
+    () => {
+      // Upload completed successfully, now we can get the download URL
+      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+        try {
+          //update user doc in users collection
+          const docRef = doc(db, 'users', currentUser.uid);
+          await updateDoc(docRef, {
+            coverPic: downloadURL,
+          });
+          setCoverPic(downloadURL);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    }
+  );
+};
 //////////////////////////////////////////////////////////////
 // CRUD OPERATIONS ON 'CATEGORIES' COLLECTION
 //////////////////////////////////////////////////////////////
@@ -579,4 +624,62 @@ export const getCategoriesAndDocuments = async () => {
   }, {});
 
   return categoryMap;
+};
+
+//////////////////////////////////////////////////////////////
+// CRUD OPERATIONS ON 'POSTS' COLLECTION
+//////////////////////////////////////////////////////////////
+//COMMENT CREATE POST
+export const createPost = async (id, name, profilePic, img, desc) => {
+  await addDoc(collection(db, 'posts'), {
+    userId: id,
+    name: name,
+    profilePic: profilePic,
+    desc: desc,
+    img: img,
+    likes: [],
+    timestamp: serverTimestamp(),
+  });
+};
+
+//COMMENT GET ALL POSTS
+export const getPosts = async (setPosts) => {
+  const posts = [];
+  const querySnapshot = await getDocs(collection(db, 'posts'));
+  querySnapshot.forEach((doc) => {
+    posts.push({ postId: doc.id, ...doc.data() });
+  });
+  setPosts(posts);
+};
+
+//COMMENT LIKE/DISLIKE POST
+export const updateLikeCnt = async (userId, postId, type) => {
+  if (type === 'inc') {
+    await updateDoc(doc(db, 'posts', postId), {
+      likes: arrayUnion(userId),
+    });
+  } else {
+    await updateDoc(doc(db, 'posts', postId), {
+      likes: arrayRemove(userId),
+    });
+  }
+};
+//COMMENT DELETE POST
+export const deletePost = async (postId) => {
+  await deleteDoc(doc(db, 'posts', postId));
+};
+
+//////////////////////////////////////////////////////////////
+// CRUD OPERATIONS ON 'COMMENTS' COLLECTION
+//////////////////////////////////////////////////////////////
+
+//COMMENT ADD Comment
+export const addComment = async (id, name, profilePic, desc, postId) => {
+  await addDoc(collection(db, 'posts', postId, 'comments'), {
+    userId: id,
+    name: name,
+    profilePic: profilePic,
+    desc: desc,
+    timestamp: serverTimestamp(),
+  });
 };

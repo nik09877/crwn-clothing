@@ -40,7 +40,9 @@ export const Footer = styled.div`
   height: 5%;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   font-size: 18px;
+  gap: 8px;
 `;
 
 export const Name = styled.span`

@@ -1,0 +1,10 @@
+.survey-results-container {
+  .survey-results-products-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 53px 20px 20px;
+  }
+}

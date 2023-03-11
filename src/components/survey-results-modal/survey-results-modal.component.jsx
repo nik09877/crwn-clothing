@@ -7,6 +7,7 @@ import { UserContext } from '../../contexts/user.context';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import { db } from '../../utils/firebase/firebase.utils';
 import SurveyResultsModalFriend from '../survey-results-modal-friend/survey-results-modal-friend.component';
+import './survey-results-modal.styles.scss';
 
 const style = {
   position: 'absolute',
@@ -20,6 +21,15 @@ const style = {
   p: 4,
 };
 
+const SurveyResultsModalFriends = ({ reviews }) => {
+  return (
+    <div className='survey-results-modal-friends-container'>
+      {reviews.map((review) => (
+        <SurveyResultsModalFriend key={review.id} review={review} />
+      ))}
+    </div>
+  );
+};
 const SurveyResultsModal = ({ showModal, handleShowModal, productId }) => {
   const [reviews, setReviews] = useState([]);
   const { currentUser } = useContext(UserContext);
@@ -66,13 +76,15 @@ const SurveyResultsModal = ({ showModal, handleShowModal, productId }) => {
             overflowY: 'scroll',
           }}
         >
-          <div>
-            <button onClick={handleShowModal}>X</button>
+          <div className='survey-results-modal-close-btn-container'>
+            <button
+              className='survey-results-modal-close-btn'
+              onClick={handleShowModal}
+            >
+              X
+            </button>
           </div>
-          {reviews &&
-            reviews.map((review) => (
-              <SurveyResultsModalFriend key={review.id} review={review} />
-            ))}
+          {reviews && <SurveyResultsModalFriends reviews={reviews} />}
         </Box>
       </Fade>
     </Modal>

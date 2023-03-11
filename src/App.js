@@ -17,6 +17,7 @@ import SharedBasket from './routes/shared-basket/shared-basket.component';
 import SharedBaskets from './routes/shared-baskets/shared-baskets.component';
 import SurveyResults from './routes/survey-results/survey-results.component';
 import VideoCall from './routes/video-call/video-call.component';
+import Social from './routes/social/social.component';
 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useContext(UserContext);
@@ -50,7 +51,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
-        <Route path='auth' element={<Authentication />} />
+        {/*<Route path='auth' element={<Authentication />} />*/}
         <Route
           path='checkout'
           element={
@@ -116,7 +117,7 @@ const App = () => {
           }
         />
         <Route
-          path='survey-results' //basketId denotes whose basket it is
+          path='survey-results'
           element={
             <PrivateRoute>
               <SurveyResults />
@@ -124,10 +125,18 @@ const App = () => {
           }
         />
         <Route
-          path='video-call' //basketId denotes whose basket it is
+          path='video-call'
           element={
             <PrivateRoute>
               <VideoCall />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='social'
+          element={
+            <PrivateRoute>
+              <Social />
             </PrivateRoute>
           }
         />

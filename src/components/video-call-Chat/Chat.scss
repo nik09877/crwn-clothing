@@ -1,8 +1,8 @@
 .chat {
   background: var(--white);
   position: absolute;
-  top: 4rem;
-  bottom: 4rem;
+  top: 8rem;
+  bottom: 6rem;
   right: 0;
   overflow-y: auto;
   width: 300px;
@@ -10,6 +10,7 @@
   flex-direction: column;
   justify-content: flex-end;
   border-left: 1px solid var(--grey);
+  border: 5px solid var(--grey);
 
   p {
     font-size: 16px;
@@ -127,6 +128,7 @@
 
 .chat-submit-button {
   background: transparent;
+  margin-bottom: 2px;
 }
 
 .close-chat {
@@ -136,6 +138,7 @@
   margin: 1rem;
   align-self: end;
   font-weight: normal;
+  transition: all 0.8s ease;
 }
 
 .close-chat:hover {

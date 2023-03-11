@@ -1,0 +1,235 @@
+@import '../../style.scss';
+
+.social-profile {
+  @include themify($themes) {
+    background-color: themed('bgSoft');
+    background-color: #fff;
+    padding: 20px 70px;
+    flex: 6;
+    max-width: 1000px;
+    h2 {
+      text-align: center;
+      margin: 35px 0px 8px;
+    }
+    .images {
+      width: 100%;
+      height: 300px;
+      position: relative;
+
+      .cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .profilePic {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+        top: 200px;
+      }
+      .cover-label {
+        display: none;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99;
+        img {
+          display: none;
+        }
+        &:hover {
+          cursor: pointer;
+          img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+          }
+        }
+      }
+      .profile-label {
+        display: none;
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        left: 0;
+        right: 0;
+        border-radius: 50%;
+        margin: auto;
+        top: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        img {
+          display: none;
+        }
+        &:hover {
+          cursor: pointer;
+          background: -moz-linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.5) 0%,
+            rgba(255, 255, 255, 0.5) 100%
+          ); /* FF3.6-15 */
+          background: -webkit-linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.5) 0%,
+            rgba(255, 255, 255, 0.5) 100%
+          ); /* Chrome10-25,Safari5.1-6 */
+          background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.5) 0%,
+            rgba(255, 255, 255, 0.5) 100%
+          ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+
+          img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+          }
+        }
+      }
+    }
+    .profileContainer {
+      padding-top: 20px;
+      width: 100%;
+
+      @include mobile {
+        padding-top: 10px;
+      }
+
+      @include tablet {
+        padding-top: 20px;
+      }
+
+      .uInfo {
+        height: 180px;
+        -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+        -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+        box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+        border-radius: 20px;
+        background-color: themed('bg');
+        color: themed('textColor');
+        padding: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+
+        @include mobile {
+          flex-direction: column;
+          height: 30vh;
+          padding: 20px;
+          margin-top: 100px;
+        }
+
+        .left {
+          flex: 1;
+          display: flex;
+          gap: 10px;
+
+          @include tablet {
+            flex-wrap: wrap;
+          }
+
+          a {
+            color: themed('textColorSoft');
+          }
+        }
+
+        .center {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          margin-top: 50px;
+          span {
+            font-size: 30px;
+            font-weight: 500;
+          }
+
+          .info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+
+            .item {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              color: themed('textColorSoft');
+
+              span {
+                font-size: 16px;
+                font-weight: 600;
+              }
+            }
+          }
+          button {
+            border: none;
+            background-color: #5271ff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+        }
+
+        .right {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 10px;
+        }
+      }
+    }
+
+    .social-friends-container {
+      text-align: center;
+      padding: 10px 20px;
+      border-radius: 20px;
+      box-shadow: 0px 0px 25px -10px rgb(0 0 0 / 38%);
+      .social-friend-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+        cursor: pointer;
+        .social-image-container {
+          width: 100px;
+          height: 100px;
+          .social-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+
+        .social-info-container {
+          p {
+            margin: 5px 0;
+            font-weight: 600;
+            color: #444;
+          }
+        }
+      }
+    }
+  }
+}

@@ -13,17 +13,28 @@ export const LogoContainer = styled(Link)`
   height: 100%;
   width: 70px;
   padding: 25px;
+  transform: translateY(-5px);
 `;
 
 export const NavLinks = styled.div`
-  width: 50%;
+  width: 80%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 20px;
 `;
 
 export const NavLink = styled(Link)`
-  padding: 10px 15px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  svg {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+  }
 `;

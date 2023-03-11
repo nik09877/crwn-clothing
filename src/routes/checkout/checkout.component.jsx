@@ -11,6 +11,7 @@ import {
   Total,
 } from './checkout.styles';
 import ShareBasketModal from '../../components/share-basket-modal/share-basket-modal.component';
+import './checkout.styles.scss';
 
 const Checkout = () => {
   const { cartItems, cartTotal } = useContext(CartContext);
@@ -41,12 +42,8 @@ const Checkout = () => {
         <CheckoutItem key={cartItem.id} cartItem={cartItem} />
       ))}
       <Total>Total: ${cartTotal}</Total>
-      <div className='share-basket'>
-        <button
-          type='button'
-          className='share-basket-btn'
-          onClick={handleShowModal}
-        >
+      <div className='share-basket-btn-container'>
+        <button className='share-basket-btn' onClick={handleShowModal}>
           Share Cart
         </button>
       </div>

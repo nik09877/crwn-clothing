@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { getFriends } from '../../utils/firebase/firebase.utils';
 import { UserContext } from '../../contexts/user.context';
 import ShareProductModalFriend from '../share-product-modal-friend/share-product-modal-friend.component';
+import './share-product-modal.styles.scss';
 
 const style = {
   position: 'absolute',
@@ -16,11 +17,25 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  borderRadius: '5px',
+  border: '2px solid black',
 };
 
+const ShareProductModalFriends = ({ friends, product }) => {
+  return (
+    <div className='share-product-modal-friends-container'>
+      {friends.map((friend) => (
+        <ShareProductModalFriend
+          key={friend.id}
+          friend={friend}
+          product={product}
+        />
+      ))}
+    </div>
+  );
+};
 const ShareProductModal = ({ showModal, handleShowModal, product }) => {
   const [friends, setFriends] = useState([]);
   const { currentUser } = useContext(UserContext);
@@ -52,17 +67,17 @@ const ShareProductModal = ({ showModal, handleShowModal, product }) => {
             overflowY: 'scroll',
           }}
         >
-          <div>
-            <button onClick={handleShowModal}>X</button>
+          <div className='share-product-modal-close-btn-container'>
+            <button
+              className='share-product-modal-close-btn'
+              onClick={handleShowModal}
+            >
+              X
+            </button>
           </div>
-          {friends &&
-            friends.map((friend) => (
-              <ShareProductModalFriend
-                key={friend.id}
-                friend={friend}
-                product={product}
-              />
-            ))}
+          {friends && (
+            <ShareProductModalFriends friends={friends} product={product} />
+          )}
         </Box>
       </Fade>
     </Modal>

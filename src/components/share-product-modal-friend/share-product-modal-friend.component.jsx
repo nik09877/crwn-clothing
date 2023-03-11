@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../contexts/user.context';
 import { getUser, sendMessage } from '../../utils/firebase/firebase.utils';
+import './share-product-modal-friend-styles.scss';
 
 const ShareProductModalFriend = ({ friend, product }) => {
   const { friendName, friendEmail, friendProfilePic } = friend;
@@ -28,9 +29,17 @@ const ShareProductModalFriend = ({ friend, product }) => {
 
   return (
     <div className='share-product-modal-friend-container' onClick={handleShare}>
-      <img src={friendProfilePic} alt='friend' />
-      <p>{friendName}</p>
-      <p>{friendEmail}</p>
+      <div className='share-product-modal-friend-img-container'>
+        <img
+          className='share-product-modal-friend-img'
+          src={friendProfilePic}
+          alt='friend'
+        />
+      </div>
+      <div className='share-product-modal-friend-info-container'>
+        <p>{friendName}</p>
+        <p>{friendEmail}</p>
+      </div>
     </div>
   );
 };

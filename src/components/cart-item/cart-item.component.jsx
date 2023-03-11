@@ -8,7 +8,16 @@ const CartItem = ({ cartItem }) => {
       <ItemDetails>
         <span>{name}</span>
         <span>
-          {quantity} x ${price}
+          {quantity}{' '}
+          <span
+            style={{
+              display: 'inline-block',
+              margin: '0 3px',
+            }}
+          >
+            x
+          </span>{' '}
+          &#8377;{price}
         </span>
       </ItemDetails>
     </CartItemContainer>

@@ -9,6 +9,7 @@ import { getFriends } from '../../utils/firebase/firebase.utils';
 import { UserContext } from '../../contexts/user.context';
 import ShareProductModalFriend from '../share-product-modal-friend/share-product-modal-friend.component';
 import SeeTwinsModalFriend from '../see-twins-modal-friend/see-twins-modal-friend.component';
+import './see-twins-modal.styles.scss';
 
 const style = {
   position: 'absolute',
@@ -20,6 +21,16 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+};
+
+const SeeTwinsModalFriends = ({ twins }) => {
+  return (
+    <div className='see-twins-modal-friends-container'>
+      {twins.map((twin) => (
+        <SeeTwinsModalFriend key={twin.id} twin={twin} />
+      ))}
+    </div>
+  );
 };
 
 const SeeTwinsModal = ({ showModal, handleShowModal, twins }) => {
@@ -44,13 +55,15 @@ const SeeTwinsModal = ({ showModal, handleShowModal, twins }) => {
             overflowY: 'scroll',
           }}
         >
-          <div>
-            <button onClick={handleShowModal}>X</button>
+          <div className='see-twins-modal-close-btn-container'>
+            <button
+              className='see-twins-modal-close-btn'
+              onClick={handleShowModal}
+            >
+              X
+            </button>
           </div>
-          {twins &&
-            twins.map((twin) => (
-              <SeeTwinsModalFriend key={twin.id} twin={twin} />
-            ))}
+          {twins && <SeeTwinsModalFriends twins={twins} />}
         </Box>
       </Fade>
     </Modal>

@@ -1,0 +1,66 @@
+.user-container {
+  width: 250px;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px #00000029, 0 0 5px #0000001f;
+  transition: all 1.2s ease;
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 5px #00000029, 0 0 10px #0000001f;
+  }
+  .user-bg-photo {
+    height: 150px;
+    background: url('https://images.unsplash.com/photo-1511207538754-e8555f2bc187?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=88672068827eaeeab540f584b883cc66&auto=format&fit=crop&w=1164&q=80')
+      no-repeat;
+    background-size: cover;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+  }
+  .user-img-container {
+    position: relative;
+    height: 60px;
+    width: 100%;
+    .user-face-photo {
+      border-radius: 50%;
+      border: 5px solid white;
+      position: absolute;
+      top: -60px;
+      left: 50px;
+      transform: translateX(10%);
+      height: 120px;
+      width: 120px;
+    }
+  }
+  .user-info-container {
+    text-align: center;
+    padding: 0 0 10px;
+    .user-name {
+      margin: 0;
+      padding: 5px;
+    }
+    .user-email {
+      margin: 0 0 30px;
+    }
+    .user-add-friend-btn {
+      width: 95%;
+      background-color: var(--primaryButtonBGColor);
+      color: #fff;
+      text-align: center;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 1s ease;
+      border-radius: 3px;
+      &:hover {
+        box-shadow: 0 1px 1px #00000029, 0 0 5px #0000001f;
+        background-color: #fff;
+        color: #000;
+        font-weight: 500;
+      }
+    }
+    .user-add-friend-btn.user-add-friend-btn:disabled {
+      cursor: not-allowed;
+      background-color: rgba(125, 115, 115, 0.712);
+      color: #fff;
+      font-weight: 500;
+    }
+  }
+}

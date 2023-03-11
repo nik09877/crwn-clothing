@@ -1,0 +1,21 @@
+@import '../../style.scss';
+
+.social-middle-bar {
+  flex: 6;
+  max-width: 1000px;
+  .social-middle-bar-wrapper {
+    @include themify($themes) {
+      padding: 20px 70px;
+      background-color: themed('bgSoft');
+      background-color: #fff;
+
+      @include mobile {
+        padding: 10px;
+      }
+
+      @include tablet {
+        padding: 20px;
+      }
+    }
+  }
+}
