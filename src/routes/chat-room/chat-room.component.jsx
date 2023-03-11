@@ -1,5 +1,4 @@
 import { Fragment, useContext, useEffect, useState } from 'react';
-
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 
 import {
@@ -28,7 +27,7 @@ import {
   sendMessage,
 } from '../../utils/firebase/firebase.utils';
 import SideBarConversation from '../../components/chat-sidebar-conversation/chat-sidebar-conversation.component';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import FillOutSurveyModal from '../../components/fill-out-survey-modal/fill-out-survey-modal.component';
 
@@ -38,12 +37,16 @@ const ChatRoom = () => {
   const [friends, setFriends] = useState([]);
   const [currentFriend, setCurrentFriend] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [currentUserDoc, setCurrentUserDoc] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [surveyProd, setSurveyProd] = useState({});
   const { currentUser } = useContext(UserContext);
   const { roomId } = useParams();
+  const { currentUserDoc } = useLocation().state;
 
-  const handleShowModal = () => setShowModal((prev) => !prev);
+  const handleShowModal = (msg) => {
+    setSurveyProd(msg);
+    setShowModal((prev) => !prev);
+  };
   const handleQueryChange = (val) => {
     setQueryVal(val);
   };
@@ -82,13 +85,6 @@ const ChatRoom = () => {
 
     return unsub;
   }, [roomId]);
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      setCurrentUserDoc(await getUser(currentUser));
-    };
-    getUserInfo();
-  }, []);
 
   const filteredfriends = friends.filter((friend) =>
     friend.friendName.toLowerCase().includes(queryVal.toLowerCase())
@@ -150,7 +146,6 @@ const ChatRoom = () => {
                 if (!msg.imageUrl || direction === 'outgoing')
                   return (
                     <Message
-                      onClick={msg.imageUrl && handleShowModal}
                       key={msg.id}
                       model={{
                         message: `${msg.message}`,
@@ -176,7 +171,7 @@ const ChatRoom = () => {
                 return (
                   <Fragment key={idx}>
                     <Message
-                      onClick={msg.imageUrl && handleShowModal}
+                      onClick={msg.imageUrl && (() => handleShowModal(msg))}
                       key={msg.id}
                       model={{
                         message: `${msg.message}`,
@@ -201,7 +196,7 @@ const ChatRoom = () => {
                     <FillOutSurveyModal
                       showModal={showModal}
                       handleShowModal={handleShowModal}
-                      msg={msg}
+                      msg={surveyProd}
                     />
                   </Fragment>
                 );
