@@ -19,7 +19,7 @@ const SurveyResultsProduct = ({ product }) => {
       </div>
       <div className='survey-results-product-info-container'>
         <p>{itemName}</p>
-        <p>{itemPrice}$</p>
+        <p>&#8377;{itemPrice}</p>
       </div>
       <button className='see-survey-results-btn' onClick={handleShowModal}>
         See Results

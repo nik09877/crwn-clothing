@@ -90,7 +90,7 @@ const FillOutSurveyModal = ({ showModal, handleShowModal, msg }) => {
               </div>
               <div className='fill-out-survey-modal-prod-details-container'>
                 <p>{productName}</p>
-                <p>{productPrice}$</p>
+                <p>&#8377;{productPrice}</p>
               </div>
             </div>
             <div className='fill-out-survey-container'>
