@@ -40,7 +40,6 @@ const SocialPost = ({ post }) => {
     });
     return unsub;
   }, []);
-
   return (
     <div className='social-post'>
       <div className='container'>
@@ -49,7 +48,9 @@ const SocialPost = ({ post }) => {
             <img src={profilePic} alt='' />
             <div className='details'>
               <span className='name'>{name}</span>
-              <span className='date'>{convertTimeStampToDate(timestamp)}</span>
+              <span className='date'>
+                {timestamp && convertTimeStampToDate(timestamp)}
+              </span>
             </div>
           </div>
           {currentUser.uid === userId ? (
