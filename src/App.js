@@ -18,6 +18,7 @@ import SharedBaskets from './routes/shared-baskets/shared-baskets.component';
 import SurveyResults from './routes/survey-results/survey-results.component';
 import VideoCall from './routes/video-call/video-call.component';
 import Social from './routes/social/social.component';
+import { CartProvider } from './contexts/cart.context';
 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useContext(UserContext);
@@ -31,7 +32,9 @@ const App = () => {
         path='/'
         element={
           <PrivateRoute>
-            <Navigation />
+            <CartProvider>
+              <Navigation />
+            </CartProvider>
           </PrivateRoute>
         }
       >
@@ -39,7 +42,9 @@ const App = () => {
           index
           element={
             <PrivateRoute>
-              <Home />
+              <CartProvider>
+                <Home />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -47,7 +52,9 @@ const App = () => {
           path='shop/*'
           element={
             <PrivateRoute>
-              <Shop />
+              <CartProvider>
+                <Shop />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -56,7 +63,9 @@ const App = () => {
           path='checkout'
           element={
             <PrivateRoute>
-              <Checkout />
+              <CartProvider>
+                <Checkout />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -64,6 +73,9 @@ const App = () => {
           path='profile'
           element={
             <PrivateRoute>
+              <CartProvider>
+                <Profile />
+              </CartProvider>
               <Profile />
             </PrivateRoute>
           }
@@ -72,7 +84,9 @@ const App = () => {
           path='users'
           element={
             <PrivateRoute>
-              <Users />
+              <CartProvider>
+                <Users />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -80,7 +94,9 @@ const App = () => {
           path='notifications'
           element={
             <PrivateRoute>
-              <Notifications />
+              <CartProvider>
+                <Notifications />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -88,7 +104,9 @@ const App = () => {
           path='chat'
           element={
             <PrivateRoute>
-              <Chat />
+              <CartProvider>
+                <Chat />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -96,7 +114,9 @@ const App = () => {
           path='chat/:roomId'
           element={
             <PrivateRoute>
-              <ChatRoom />
+              <CartProvider>
+                <ChatRoom />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -104,7 +124,9 @@ const App = () => {
           path='shared-baskets'
           element={
             <PrivateRoute>
-              <SharedBaskets />
+              <CartProvider>
+                <SharedBaskets />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -112,7 +134,9 @@ const App = () => {
           path='shared-basket/:basketId' //basketId denotes whose basket it is
           element={
             <PrivateRoute>
-              <SharedBasket />
+              <CartProvider>
+                <SharedBasket />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -120,7 +144,9 @@ const App = () => {
           path='survey-results'
           element={
             <PrivateRoute>
-              <SurveyResults />
+              <CartProvider>
+                <SurveyResults />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -128,7 +154,9 @@ const App = () => {
           path='video-call'
           element={
             <PrivateRoute>
-              <VideoCall />
+              <CartProvider>
+                <VideoCall />
+              </CartProvider>
             </PrivateRoute>
           }
         />
@@ -136,7 +164,9 @@ const App = () => {
           path='social'
           element={
             <PrivateRoute>
-              <Social />
+              <CartProvider>
+                <Social />
+              </CartProvider>
             </PrivateRoute>
           }
         />
