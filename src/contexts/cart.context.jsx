@@ -73,32 +73,6 @@ export const CartProvider = ({ children }) => {
   const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
-    //COMMENT WAS PERFECTLY WORKING CODE
-    // const getAllCartItems = async () => {
-    //   await getCartItems(currentUser, setCartItems);
-    // };
-    // getAllCartItems();
-
-    const q = query(collection(db, 'users', currentUser.uid, 'basketItems'));
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        const basketItem = doc.data();
-        items.push({
-          id: basketItem.itemId,
-          imageUrl: basketItem.itemImage,
-          name: basketItem.itemName,
-          price: basketItem.itemPrice,
-          quantity: basketItem.itemQuantity,
-        });
-      });
-      setCartItems(items);
-    });
-
-    return unsub;
-  }, []);
-
-  useEffect(() => {
     const newCartCount = cartItems.reduce(
       (total, cartItem) => total + cartItem.quantity,
       0
@@ -121,6 +95,33 @@ export const CartProvider = ({ children }) => {
     };
     updateTotal();
   }, [cartItems]);
+
+  useEffect(() => {
+    //COMMENT WAS PERFECTLY WORKING CODE
+    const getAllCartItems = async () => {
+      await getCartItems(currentUser, setCartItems);
+    };
+    getAllCartItems();
+
+    //COMMENT NOT WORKING
+    // const q = query(collection(db, 'users', currentUser.uid, 'basketItems'));
+    // const unsub = onSnapshot(q, (querySnapshot) => {
+    //   const items = [];
+    //   querySnapshot.forEach((doc) => {
+    //     const basketItem = doc.data();
+    //     items.push({
+    //       id: basketItem.itemId,
+    //       imageUrl: basketItem.itemImage,
+    //       name: basketItem.itemName,
+    //       price: basketItem.itemPrice,
+    //       quantity: basketItem.itemQuantity,
+    //     });
+    //   });
+    //   setCartItems(items);
+    // });
+
+    // return unsub;
+  }, []);
 
   const addItemToCart = async (productToAdd) => {
     const items = await addCartItem(cartItems, productToAdd, currentUser);
