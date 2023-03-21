@@ -17,11 +17,13 @@ import './product-card.custom-styles.scss';
 import ShareProductModal from '../share-product-modal/share-product-modal.component';
 import SeeTwinsModal from '../see-twins-modal/see-twins-modal.component';
 import { Tooltip } from '@mui/material';
+import AddToSharedCartsModal from '../add-to-shared-carts-modal/add-to-shared-carts-modal.component';
 
 const ProductCard = ({ product }) => {
   const [twins, setTwins] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showTwins, setShowTwins] = useState(false);
+  const [showSharedCarts, setShowSharedCarts] = useState(false);
   const { name, price, imageUrl } = product;
   const { addItemToCart } = useContext(CartContext);
   const { currentUser } = useContext(UserContext);
@@ -30,6 +32,7 @@ const ProductCard = ({ product }) => {
 
   const handleShowModal = () => setShowModal((prev) => !prev);
   const handleShowTwins = () => setShowTwins((prev) => !prev);
+  const handleShowSharedCarts = () => setShowSharedCarts((prev) => !prev);
 
   useEffect(() => {
     const findTwins = async () => {
@@ -92,20 +95,38 @@ const ProductCard = ({ product }) => {
       </Footer>
       <Button
         buttonType={BUTTON_TYPE_CLASSES.inverted}
+        onClick={handleShowSharedCarts}
+        style={{ top: '215px' }}
+      >
+        Add to Shared Carts
+      </Button>
+      <Button
+        buttonType={BUTTON_TYPE_CLASSES.inverted}
         onClick={addProductToCart}
       >
         Add to cart
       </Button>
-      <ShareProductModal
-        showModal={showModal}
-        handleShowModal={handleShowModal}
-        product={product}
-      />
-      <SeeTwinsModal
-        showModal={showTwins}
-        handleShowModal={handleShowTwins}
-        twins={twins}
-      />
+      {showModal && (
+        <ShareProductModal
+          showModal={showModal}
+          handleShowModal={handleShowModal}
+          product={product}
+        />
+      )}
+      {showTwins && (
+        <SeeTwinsModal
+          showModal={showTwins}
+          handleShowModal={handleShowTwins}
+          twins={twins}
+        />
+      )}
+      {showSharedCarts && (
+        <AddToSharedCartsModal
+          showModal={showSharedCarts}
+          handleShowModal={handleShowSharedCarts}
+          product={product}
+        />
+      )}
     </ProductCartContainer>
   );
 };

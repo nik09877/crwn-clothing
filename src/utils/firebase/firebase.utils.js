@@ -21,9 +21,7 @@ import {
   collection,
   writeBatch,
   query,
-  onSnapshot,
   orderBy,
-  limit,
   addDoc,
   serverTimestamp,
   arrayUnion,
@@ -403,6 +401,16 @@ export const updateItemInBasket = async (currentUser, product, type) => {
   });
 };
 
+//COMMENT CHECK IF PRODUCT IS ALREADY IN THE CART
+export const checkItemExistsInBasket = async (currentUser, product) => {
+  const id = String(product.id);
+
+  const docSnap = await getDoc(
+    doc(db, 'users', currentUser.uid, 'basketItems', id)
+  );
+  return docSnap.exists();
+};
+
 //COMMENT DELETE ITEM FROM BASKET
 export const deleteItemFromBasket = async (currentUser, product) => {
   //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
@@ -493,6 +501,18 @@ export const getSharedBasketFriends = async (currentUser) => {
   querySnapshot.forEach((doc) => {
     const curFrnd = { id: doc.id, ...doc.data() };
     if (curFrnd?.read || curFrnd?.write) friends.push(curFrnd);
+  });
+  return friends;
+};
+//COMMENT GET ALL THE FRIENDS THAT HAVE SHARED THEIR BASKETS AND THEY HAVE GIVEN WRITE ACCESS PERMISSION
+export const getSharedBasketFriendsWithWriteAccess = async (currentUser) => {
+  const friends = [];
+  const querySnapshot = await getDocs(
+    collection(db, 'users', currentUser.uid, 'friends')
+  );
+  querySnapshot.forEach((doc) => {
+    const curFrnd = { id: doc.id, ...doc.data() };
+    if (curFrnd?.write) friends.push(curFrnd);
   });
   return friends;
 };

@@ -1,6 +1,8 @@
+import { collection, onSnapshot, query } from 'firebase/firestore';
 import { createContext, useState, useEffect, useContext } from 'react';
 import {
   addItemToBasket,
+  db,
   deleteItemFromBasket,
   getCartItems,
   updateCartItemsCount,
@@ -71,10 +73,29 @@ export const CartProvider = ({ children }) => {
   const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
-    const getAllCartItems = async () => {
-      await getCartItems(currentUser, setCartItems);
-    };
-    getAllCartItems();
+    //COMMENT WAS PERFECTLY WORKING CODE
+    // const getAllCartItems = async () => {
+    //   await getCartItems(currentUser, setCartItems);
+    // };
+    // getAllCartItems();
+
+    const q = query(collection(db, 'users', currentUser.uid, 'basketItems'));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        const basketItem = doc.data();
+        items.push({
+          id: basketItem.itemId,
+          imageUrl: basketItem.itemImage,
+          name: basketItem.itemName,
+          price: basketItem.itemPrice,
+          quantity: basketItem.itemQuantity,
+        });
+      });
+      setCartItems(items);
+    });
+
+    return unsub;
   }, []);
 
   useEffect(() => {
