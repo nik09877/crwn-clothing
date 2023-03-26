@@ -51,7 +51,7 @@ const ProductCard = ({ product }) => {
             placement='bottom'
           >
             <span className='prod-card-twin-cnt' onClick={handleShowTwins}>
-              Twin count:{twins.length}
+              Twins:{twins.length}
             </span>
           </Tooltip>
           <Name>{name}</Name>
