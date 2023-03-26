@@ -15,7 +15,7 @@ const SocialProfile = () => {
   const { currentUser } = useContext(UserContext);
   const [profilePic, setProfilePic] = useState('');
   const [coverPic, setCoverPic] = useState(
-    'https://images.pexels.com/photos/13440765/pexels-photo-13440765.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+    'https://images.unsplash.com/photo-1559311648-d46f5d8593d6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1150&q=80'
   );
   const [currentUserDoc, setCurrentUserDoc] = useState(null);
   const [friends, setFriends] = useState([]);
@@ -31,6 +31,14 @@ const SocialProfile = () => {
   };
 
   useEffect(() => {
+    const getUserData = async () => {
+      const userDoc = await getUser(currentUser);
+      setCurrentUserDoc(userDoc);
+    };
+    getUserData();
+  }, []);
+
+  useEffect(() => {
     const getUserProfilePic = async () => {
       const { profilePic } = await getUser(currentUser);
       setProfilePic(profilePic);
@@ -39,11 +47,11 @@ const SocialProfile = () => {
   }, []);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const userDoc = await getUser(currentUser);
-      setCurrentUserDoc(userDoc);
+    const getUserCoverPic = async () => {
+      const { coverPic: coverPicture } = await getUser(currentUser);
+      coverPicture && setCoverPic(coverPicture);
     };
-    getUserData();
+    getUserCoverPic();
   }, []);
 
   useEffect(() => {
