@@ -76,7 +76,6 @@ const App = () => {
               <CartProvider>
                 <Profile />
               </CartProvider>
-              <Profile />
             </PrivateRoute>
           }
         />
