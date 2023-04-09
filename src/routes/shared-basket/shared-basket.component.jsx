@@ -85,7 +85,7 @@ const SharedBasket = () => {
             write={write}
           />
         ))}
-      <Total>Total: ${cartTotal}</Total>
+      <Total>Total: &#8377;{cartTotal}</Total>
     </CheckoutContainer>
   );
 };

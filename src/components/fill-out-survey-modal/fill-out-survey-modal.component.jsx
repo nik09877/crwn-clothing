@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Spinner from '../spinner/spinner.component';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -24,7 +25,6 @@ const style = {
 };
 
 const FillOutSurveyModal = ({ showModal, handleShowModal, msg }) => {
-  const { userId, productName, productPrice, productId, imageUrl } = msg;
   const [quality, setQuality] = useState(0);
   const [fitting, setFitting] = useState(0);
   const [valMoney, setValMoney] = useState(0);
@@ -34,10 +34,10 @@ const FillOutSurveyModal = ({ showModal, handleShowModal, msg }) => {
 
   const handleSubmit = async () => {
     const productInfo = {
-      name: productName,
-      price: productPrice,
-      id: productId,
-      image: imageUrl,
+      name: msg.productName,
+      price: msg.productPrice,
+      id: msg.productId,
+      image: msg.imageUrl,
     };
     const reviewInfo = {
       quality,
@@ -46,10 +46,20 @@ const FillOutSurveyModal = ({ showModal, handleShowModal, msg }) => {
       material,
       feedback,
     };
-    await addToSurveyResults(userId, productId, productInfo);
-    await submitReview(userId, productId, currentUser, reviewInfo);
+    await addToSurveyResults(msg.userId, msg.productId, productInfo);
+    await submitReview(msg.userId, msg.productId, currentUser, reviewInfo);
     handleShowModal();
   };
+
+  if (
+    !msg ||
+    !msg.userId ||
+    !msg.productName ||
+    !msg.productPrice ||
+    !msg.productId ||
+    !msg.imageUrl
+  )
+    return null;
   return (
     <Modal
       aria-labelledby='transition-modal-title'
@@ -84,13 +94,13 @@ const FillOutSurveyModal = ({ showModal, handleShowModal, msg }) => {
               <div className='fill-out-survey-modal-prod-img-container'>
                 <img
                   className='fill-out-survey-modal-prod-img'
-                  src={imageUrl}
+                  src={msg.imageUrl && msg.imageUrl}
                   alt='product'
                 />
               </div>
               <div className='fill-out-survey-modal-prod-details-container'>
-                <p>{productName}</p>
-                <p>&#8377;{productPrice}</p>
+                <p>{msg.productName && msg.productName}</p>
+                <p>&#8377;{msg.productPrice && msg.productPrice}</p>
               </div>
             </div>
             <div className='fill-out-survey-container'>
