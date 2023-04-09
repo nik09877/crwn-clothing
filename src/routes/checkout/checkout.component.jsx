@@ -41,7 +41,7 @@ const Checkout = () => {
       {cartItems.map((cartItem) => (
         <CheckoutItem key={cartItem.id} cartItem={cartItem} />
       ))}
-      <Total>Total: ${cartTotal}</Total>
+      <Total>Total: &#8377;{cartTotal}</Total>
       <div className='share-basket-btn-container'>
         <button className='share-basket-btn' onClick={handleShowModal}>
           Share Cart
