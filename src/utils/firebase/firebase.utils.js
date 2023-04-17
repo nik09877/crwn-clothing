@@ -23,6 +23,7 @@ import {
 import { getStorage, ref } from 'firebase/storage';
 
 // Your web app's Firebase configuration
+//COMMENT PLEASE USE YOUR OWN FIREBASE CONFIG IF YOU ARE CLONING THIS PROJECT
 const firebaseConfig = {
   apiKey: 'AIzaSyDbA12ZqUPQSkLvUmnJhgNqCVRb6Kglyv4',
   authDomain: 'crwn-db-e6798.firebaseapp.com',
