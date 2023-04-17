@@ -1,3 +1,4 @@
+//COMMENT PLEASE USE YOUR OWN FIREBASE CONFIG IF YOU ARE CLONING THIS PROJECT
 export const firebaseConfig = {
   apiKey: 'AIzaSyDbA12ZqUPQSkLvUmnJhgNqCVRb6Kglyv4',
   authDomain: 'crwn-db-e6798.firebaseapp.com',
