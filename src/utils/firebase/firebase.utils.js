@@ -26,6 +26,7 @@ import {
   serverTimestamp,
   arrayUnion,
   arrayRemove, //for real time data fetching
+  runTransaction,
 } from 'firebase/firestore';
 
 import {
@@ -368,37 +369,79 @@ export const getCartItems = async (currentUser, setCartItems) => {
 
 //COMMENT ADD ITEM TO BASKET
 export const addItemToBasket = async (currentUser, product) => {
+  //IT SHOULD BE A TRANSACTION
+  try {
+    const id = String(product.id);
+    await runTransaction(db, async (transaction) => {
+      transaction.set(doc(db, 'users', currentUser.uid, 'basketItems', id), {
+        itemId: product.id,
+        itemName: product.name,
+        itemImage: product.imageUrl,
+        itemPrice: product.price,
+        itemQuantity: 1,
+      });
+    });
+  } catch (e) {
+    console.log('Transaction failed: ', e);
+  }
+
   //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
-  const id = String(product.id);
-  await setDoc(
-    doc(db, 'users', currentUser.uid, 'basketItems', id),
-    {
-      itemId: product.id,
-      itemName: product.name,
-      itemImage: product.imageUrl,
-      itemPrice: product.price,
-      itemQuantity: 1,
-    }
-    // { merge: true }
-  );
+
+  // const id = String(product.id);
+  // await setDoc(
+  //   doc(db, 'users', currentUser.uid, 'basketItems', id),
+  //   {
+  //     itemId: product.id,
+  //     itemName: product.name,
+  //     itemImage: product.imageUrl,
+  //     itemPrice: product.price,
+  //     itemQuantity: 1,
+  //   }
+  //   // { merge: true }
+  // );
 };
 
 //COMMENT UPDATE ITEM IN BASKET
 export const updateItemInBasket = async (currentUser, product, type) => {
+  //IT SHOULD BE A TRANSACTION
+  try {
+    const id = String(product.id);
+
+    await runTransaction(db, async (transaction) => {
+      const sfDoc = await transaction.get(
+        doc(db, 'users', currentUser.uid, 'basketItems', id)
+      );
+      if (!sfDoc.exists()) {
+        throw 'Document does not exist!';
+      }
+      const basketItem = sfDoc.data();
+      const newQuantity =
+        type === 'inc'
+          ? basketItem.itemQuantity + 1
+          : basketItem.itemQuantity - 1;
+
+      transaction.update(doc(db, 'users', currentUser.uid, 'basketItems', id), {
+        itemQuantity: newQuantity,
+      });
+    });
+  } catch (e) {
+    console.log('Transaction failed: ', e);
+  }
+
   //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
-  const id = String(product.id);
+  // const id = String(product.id);
 
-  const docSnap = await getDoc(
-    doc(db, 'users', currentUser.uid, 'basketItems', id)
-  );
-  const basketItem = docSnap.data();
-  const newQuantity =
-    type === 'inc' ? basketItem.itemQuantity + 1 : basketItem.itemQuantity - 1;
+  // const docSnap = await getDoc(
+  //   doc(db, 'users', currentUser.uid, 'basketItems', id)
+  // );
+  // const basketItem = docSnap.data();
+  // const newQuantity =
+  //   type === 'inc' ? basketItem.itemQuantity + 1 : basketItem.itemQuantity - 1;
 
-  const docRef = doc(db, 'users', currentUser.uid, 'basketItems', id);
-  await updateDoc(docRef, {
-    itemQuantity: newQuantity,
-  });
+  // const docRef = doc(db, 'users', currentUser.uid, 'basketItems', id);
+  // await updateDoc(docRef, {
+  //   itemQuantity: newQuantity,
+  // });
 };
 
 //COMMENT CHECK IF PRODUCT IS ALREADY IN THE CART
@@ -413,9 +456,19 @@ export const checkItemExistsInBasket = async (currentUser, product) => {
 
 //COMMENT DELETE ITEM FROM BASKET
 export const deleteItemFromBasket = async (currentUser, product) => {
+  //IT SHOULD BE A TRANSACTION
+  try {
+    const id = String(product.id);
+    await runTransaction(db, async (transaction) => {
+      transaction.delete(doc(db, 'users', currentUser.uid, 'basketItems', id));
+    });
+  } catch (e) {
+    console.log('Transaction failed: ', e);
+  }
+
   //Id HAS TO BE A STRING , IT CAN'T BE A NUMBER
-  const id = String(product.id);
-  await deleteDoc(doc(db, 'users', currentUser.uid, 'basketItems', id));
+  // const id = String(product.id);
+  // await deleteDoc(doc(db, 'users', currentUser.uid, 'basketItems', id));
 };
 
 //COMMENT UPDATE CART PRICE
