@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const BaseButton = styled.button`
-  min-width: 165px;
+  /* min-width: 165px; */
   width: auto;
   height: 50px;
   letter-spacing: 0.5px;
@@ -22,6 +22,13 @@ export const BaseButton = styled.button`
     background-color: white;
     color: black;
     border: 1px solid black;
+  }
+  @media (max-width: 1100px) {
+    padding: 0 10px 0 10px;
+  }
+  @media (max-width: 700px) {
+    width: 50%;
+    padding: 0;
   }
 `;
 

@@ -1,5 +1,5 @@
-import { Fragment, useContext } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Fragment, useContext, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import CartIcon from '../../components/cart-icon/cart-icon.component';
 import CartDropdown from '../../components/cart-dropdown/cart-dropdown.component';
@@ -21,12 +21,27 @@ import {
   NavLinks,
   NavLink,
   LogoContainer,
+  DropdownMenu,
 } from './navigation.styles';
 import { Tooltip } from '@mui/material';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const Navigation = () => {
   const { currentUser } = useContext(UserContext);
   const { isCartOpen } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  //DROPDOWN MENU
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Fragment>
@@ -199,6 +214,49 @@ const Navigation = () => {
           </Tooltip>
           <CartIcon />
         </NavLinks>
+        <DropdownMenu>
+          <Button
+            id='basic-button'
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup='true'
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}
+            style={{ color: ' #333' }}
+          >
+            Menu
+          </Button>
+          <Menu
+            id='basic-menu'
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+          >
+            <MenuItem onClick={() => navigate('/shop')}>Shop</MenuItem>
+            <MenuItem onClick={() => navigate('/shared-baskets')}>
+              Shared Carts
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/survey-results')}>
+              Survey Results
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/social')}>Social</MenuItem>
+            <MenuItem onClick={() => navigate('/chat')}>Chat</MenuItem>
+            <MenuItem onClick={() => navigate('/video-call')}>
+              Video call
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/notifications')}>
+              Notifications
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/profile')}>My Profile</MenuItem>
+            <MenuItem onClick={() => navigate('/users')}>Search User</MenuItem>
+            <MenuItem onClick={() => navigate('/checkout')}>
+              Go to Checkout
+            </MenuItem>
+            <MenuItem onClick={signOutUser}>Logout</MenuItem>
+          </Menu>
+        </DropdownMenu>
         {isCartOpen && <CartDropdown />}
       </NavigationContainer>
       <Outlet />

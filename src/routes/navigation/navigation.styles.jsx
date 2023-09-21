@@ -14,6 +14,9 @@ export const LogoContainer = styled(Link)`
   width: 70px;
   padding: 25px;
   transform: translateY(-5px);
+  @media (max-width: 650px) {
+    transform: translateY(-10px);
+  }
 `;
 
 export const NavLinks = styled.div`
@@ -23,6 +26,12 @@ export const NavLinks = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 20px;
+  @media (max-width: 700px) {
+    gap: 10px;
+  }
+  @media (max-width: 650px) {
+    display: none;
+  }
 `;
 
 export const NavLink = styled(Link)`
@@ -36,5 +45,18 @@ export const NavLink = styled(Link)`
     display: inline-block;
     width: 30px;
     height: 30px;
+  }
+  @media (max-width: 700px) {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
+export const DropdownMenu = styled.div`
+  display: none;
+  @media (max-width: 650px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;

@@ -11,6 +11,7 @@ import {
   Footer,
   Name,
   Price,
+  CartSpan,
 } from './product-card.styles';
 import './product-card.custom-styles.scss';
 
@@ -98,13 +99,13 @@ const ProductCard = ({ product }) => {
         onClick={handleShowSharedCarts}
         style={{ top: '215px' }}
       >
-        Add to Shared Carts
+        <CartSpan>Add to Shared Carts</CartSpan>
       </Button>
       <Button
         buttonType={BUTTON_TYPE_CLASSES.inverted}
         onClick={addProductToCart}
       >
-        Add to cart
+        <CartSpan>Add to cart</CartSpan>
       </Button>
       {showModal && (
         <ShareProductModal

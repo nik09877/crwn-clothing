@@ -33,6 +33,9 @@ export const ProductCartContainer = styled.div`
       display: flex;
     }
   }
+  @media (max-width: 700px) {
+    height: 400px;
+  }
 `;
 
 export const Footer = styled.div`
@@ -43,6 +46,9 @@ export const Footer = styled.div`
   flex-wrap: wrap;
   font-size: 18px;
   gap: 8px;
+  @media (max-width: 700px) {
+    height: 15%;
+  }
 `;
 
 export const Name = styled.span`
@@ -52,4 +58,10 @@ export const Name = styled.span`
 
 export const Price = styled.span`
   width: 10%;
+`;
+
+export const CartSpan = styled.span`
+  @media (max-width: 750px) {
+    font-size: 10px;
+  }
 `;
